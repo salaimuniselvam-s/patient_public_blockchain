@@ -15,7 +15,6 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         waitConfirmations: network.config.blockConfirmations || 1
     })
     log(`PatientRecord deployed at ${PatientRecord.address}`)
-    console.log(network.name)
 
     if (
         !developmentChains.includes(network.name) &&
