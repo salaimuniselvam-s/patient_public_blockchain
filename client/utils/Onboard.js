@@ -1,4 +1,5 @@
 /* eslint-disable prefer-destructuring */
+
 function isEthereum() {
   if (window.ethereum) {
     return true;
@@ -97,24 +98,33 @@ export const GetParams = async () => {
 };
 
 export async function SwitchNetwork() {
-  await window?.ethereum
-    ?.request({
-      method: "wallet_addEthereumChain",
-      params: [
-        {
-          chainId: "0x5",
-          chainName: "Goerli",
-          nativeCurrency: {
-            name: "GoerliETH",
-            symbol: "GoerliETH",
-            decimals: 18,
-          },
-          rpcUrls: ["https://goerli.infura.io/v3/"],
-          blockExplorerUrls: ["https://goerli.etherscan.io"],
-        },
-      ],
-    })
-    .catch((error) => {
-      console.log(error);
+  try {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: "0x5" }],
     });
+  } catch (error) {
+    console.log(error);
+    if (error.code == 4902) {
+      // let hex_chainId = ethers.utils.hexValue(5);
+      await window?.ethereum
+        ?.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0x5",
+              chainName: "Goerli",
+              nativeCurrency: {
+                name: "GoerliETH",
+                symbol: "GoerliETH",
+                decimals: 18,
+              },
+              rpcUrls: ["https://goerli.infura.io/v3/"],
+              blockExplorerUrls: ["https://goerli.etherscan.io"],
+            },
+          ],
+        })
+        .catch((error) => console.log(error));
+    }
+  }
 }
