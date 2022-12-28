@@ -56,6 +56,16 @@ contract PatientRecordSystem is Ownable {
     mapping(address => mapping(address => bool)) hasAccessToDoctor;
     mapping(address => mapping(address => bool)) hasAccessToPharmacy;
 
+    event PatientRecordsAdded(address Patient);
+    event DoctorRecordsAdded(address Doctor);
+    event PharmacyRecordsAdded(address Pharmacy);
+    event AccessGrantedToDoctor(address Patient, address Doctor);
+    event AccessGrantedToPharmacy(address Patient, address Pharmacy);
+    event AccessRevokedFromDoctor(address Patient, address Doctor);
+    event AccessRevokedFromPharmacy(address Patient, address Pharmacy);
+    event PatientRecordModified(address Patient, address ModifiedBy);
+    event RevokeUser(address user, AccessControls);
+
     modifier isValid(address _addr) {
         if (allowAccess[_addr] == AccessControls.Patient)
             revert AlreadyRegisteredAsPatient();
@@ -115,42 +125,47 @@ contract PatientRecordSystem is Ownable {
             "Not Registered"
         );
         if (allowAccess[_addr] == AccessControls.Patient) {
-            // PatientRecord memory patient ;
-            //       for (uint i = 0; i < patientRecords.length; i++) {
-            //   if (patientRecords[i].addr ==  _addr) {         // if this is the struct we want to delete...
-            //     patient = patientRecords[i];                    // save it to a variable
-            //     patientRecords[i] = patientRecords[patientRecords.length - 1]; // overwrite it with the last struct
-            //     patientRecords[patientRecords.length - 1] = patient;   // overwrite the last struct with the struct we want to delete
-            //   }
+            // PatientRecord memory patient;
+            // for (uint i = 0; i < patientRecords.length; i++) {
+            //     if (patientRecords[i].addr == _addr) {
+            //         patient = patientRecords[i];
+            //         patientRecords[i] = patientRecords[
+            //             patientRecords.length - 1
+            //         ];
+            //         patientRecords[patientRecords.length - 1] = patient;
+            //     }
             // }
-            // patientRecords.pop() ;
+            // patientRecords.pop();
             delete patientRecordDetails[_addr];
         }
         if (allowAccess[_addr] == AccessControls.Doctor) {
-            //        DoctorRecord memory doctor ;
-            //       for (uint i = 0; i < doctorRecords.length; i++) {
-            //   if (doctorRecords[i].addr ==  _addr) {
-            //     doctor = doctorRecords[i];
-            //     doctorRecords[i] = doctorRecords[doctorRecords.length - 1];
-            //     doctorRecords[doctorRecords.length - 1] = doctor;
-            //   }
+            // DoctorRecord memory doctor;
+            // for (uint i = 0; i < doctorRecords.length; i++) {
+            //     if (doctorRecords[i].addr == _addr) {
+            //         doctor = doctorRecords[i];
+            //         doctorRecords[i] = doctorRecords[doctorRecords.length - 1];
+            //         doctorRecords[doctorRecords.length - 1] = doctor;
+            //     }
             // }
-            // doctorRecords.pop() ;
+            // doctorRecords.pop();
             delete doctorRecordDetails[_addr];
         }
         if (allowAccess[_addr] == AccessControls.Pharmacy) {
-            //        PharmacyRecord memory pharmacy ;
-            //       for (uint i = 0; i < pharmacyRecords.length; i++) {
-            //   if (pharmacyRecords[i].addr ==  _addr) {
-            //     pharmacy = pharmacyRecords[i];
-            //     pharmacyRecords[i] = pharmacyRecords[pharmacyRecords.length - 1];
-            //     pharmacyRecords[pharmacyRecords.length - 1] = pharmacy;
-            //   }
+            // PharmacyRecord memory pharmacy;
+            // for (uint i = 0; i < pharmacyRecords.length; i++) {
+            //     if (pharmacyRecords[i].addr == _addr) {
+            //         pharmacy = pharmacyRecords[i];
+            //         pharmacyRecords[i] = pharmacyRecords[
+            //             pharmacyRecords.length - 1
+            //         ];
+            //         pharmacyRecords[pharmacyRecords.length - 1] = pharmacy;
+            //     }
             // }
-            // pharmacyRecords.pop() ;
+            // pharmacyRecords.pop();
 
             delete pharmacyRecordDetails[_addr];
         }
+        emit RevokeUser(_addr, allowAccess[_addr]);
         allowAccess[_addr] = AccessControls.Unauthorized;
     }
 
@@ -184,6 +199,7 @@ contract PatientRecordSystem is Ownable {
         );
         patientRecords.push(patient);
         patientRecordDetails[msg.sender] = patient;
+        emit PatientRecordsAdded(msg.sender);
     }
 
     function getPatientRecord()
@@ -214,6 +230,7 @@ contract PatientRecordSystem is Ownable {
         );
         doctorRecords.push(doctor);
         doctorRecordDetails[msg.sender] = doctor;
+        emit DoctorRecordsAdded(msg.sender);
     }
 
     // function getDoctorRecord() public isDoctor(msg.sender) view returns(DoctorRecord memory){
@@ -233,6 +250,7 @@ contract PatientRecordSystem is Ownable {
         );
         pharmacyRecords.push(Pharmacy);
         pharmacyRecordDetails[msg.sender] = Pharmacy;
+        emit PharmacyRecordsAdded(msg.sender);
     }
 
     // function getPharmacyRecord() public isPharmacy(msg.sender) view returns(PharmacyRecord memory){
@@ -271,6 +289,7 @@ contract PatientRecordSystem is Ownable {
             "Not Registered as Doctor"
         );
         hasAccessToDoctor[_doctor][msg.sender] = true;
+        emit AccessGrantedToDoctor(msg.sender, _doctor);
     }
 
     function revokeAccessToDoctor(
@@ -281,6 +300,7 @@ contract PatientRecordSystem is Ownable {
             "Not Registered as Doctor"
         );
         hasAccessToDoctor[_doctor][msg.sender] = false;
+        emit AccessRevokedFromDoctor(msg.sender, _doctor);
     }
 
     function allowAccessToPharmacy() public isPatient(msg.sender) {
@@ -290,6 +310,7 @@ contract PatientRecordSystem is Ownable {
             "Not Registered as Pharmacy"
         );
         hasAccessToPharmacy[_Pharmacy][msg.sender] = true;
+        emit AccessGrantedToPharmacy(msg.sender, _Pharmacy);
     }
 
     function revokeAccessToPharmacy() public isPatient(msg.sender) {
@@ -299,6 +320,7 @@ contract PatientRecordSystem is Ownable {
             "Not Registered as Pharmacy"
         );
         hasAccessToPharmacy[_Pharmacy][msg.sender] = false;
+        emit AccessRevokedFromPharmacy(msg.sender, _Pharmacy);
     }
 
     function getPatientsOfDoctors()
@@ -349,7 +371,7 @@ contract PatientRecordSystem is Ownable {
         address _addr,
         address _pharmacy,
         string memory _desc
-    ) public isDoctor(msg.sender) isPharmacy(_pharmacy) isPharmacy(_addr) {
+    ) public isDoctor(msg.sender) isPharmacy(_pharmacy) isPatient(_addr) {
         if (!hasAccessToDoctor[msg.sender][_addr]) revert UnauthorizedDoctor();
         PatientRecord memory patient = PatientRecord(
             patientRecordDetails[_addr].name,
@@ -363,5 +385,6 @@ contract PatientRecordSystem is Ownable {
             _desc
         );
         patientRecordDetails[_addr] = patient;
+        emit PatientRecordModified(_addr, msg.sender);
     }
 }
