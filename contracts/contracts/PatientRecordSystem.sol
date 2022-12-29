@@ -339,8 +339,10 @@ contract PatientRecordSystem is Ownable {
         emit AccessRevokedFromDoctor(msg.sender, _doctor);
     }
 
-    function allowAccessToPharmacy() public isPatient(msg.sender) {
-        address _Pharmacy = patientRecordDetails[msg.sender].pharmacy;
+    function allowAccessToPharmacy(
+        address _Pharmacy
+    ) public isPatient(msg.sender) {
+        // address _Pharmacy = patientRecordDetails[msg.sender].pharmacy;
         require(
             allowAccess[_Pharmacy] == AccessControls.Pharmacy,
             "Not Registered as Pharmacy"
@@ -349,8 +351,10 @@ contract PatientRecordSystem is Ownable {
         emit AccessGrantedToPharmacy(msg.sender, _Pharmacy);
     }
 
-    function revokeAccessToPharmacy() public isPatient(msg.sender) {
-        address _Pharmacy = patientRecordDetails[msg.sender].pharmacy;
+    function revokeAccessToPharmacy(
+        address _Pharmacy
+    ) public isPatient(msg.sender) {
+        // address _Pharmacy = patientRecordDetails[msg.sender].pharmacy;
         require(
             allowAccess[_Pharmacy] == AccessControls.Pharmacy,
             "Not Registered as Pharmacy"
