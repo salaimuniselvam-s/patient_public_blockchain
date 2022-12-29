@@ -3,7 +3,7 @@ const formatString = input => ethers.utils.formatBytes32String(input)
 require("dotenv").config()
 
 const feedPatients = async (accounts, PatientRecordSystem) => {
-    if (process.env.initial == true) {
+    if (process.env.initial == "true") {
         const tx = await PatientRecordSystem.authorizeUser(
             accounts[1].address,
             1
@@ -32,7 +32,7 @@ const feedPatients = async (accounts, PatientRecordSystem) => {
 }
 
 const feedDoctors = async (accounts, PatientRecordSystem) => {
-    if (process.env.initial == true) {
+    if (process.env.initial == "true") {
         const tx = await PatientRecordSystem.authorizeUser(
             accounts[4].address,
             2
@@ -65,7 +65,7 @@ const feedDoctors = async (accounts, PatientRecordSystem) => {
 }
 
 const feedPharmacy = async (accounts, PatientRecordSystem) => {
-    if (process.env.initial == true) {
+    if (process.env.initial == "true") {
         const tx = await PatientRecordSystem.authorizeUser(
             accounts[7].address,
             3
