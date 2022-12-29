@@ -1,8 +1,13 @@
-import React from 'react'
+import { Card } from 'antd'
+import React, { useState } from 'react';
+import Pharmainfocontainer from './pharmainfocontainer';
 
 const pharms = () => {
+
   return (
-    <div>pharms</div>
+    <>
+      <Pharmainfocontainer />
+    </>
   )
 }
 

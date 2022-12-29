@@ -1,9 +1,12 @@
 import React from 'react'
+import Patientinfocontainer from '../components/patientinfocontainer'
 
 const patientInfo = () => {
   return (
-    <div>patientInfo</div>
-  )
+      <>
+          <Patientinfocontainer/>
+      </>
+    )
 }
 
 export default patientInfo
