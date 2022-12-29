@@ -1,12 +1,11 @@
 import React from "react";
-import RevokeAccess from "../components/RevokeAccess";
+import Hospitlinfocontainer from "../components/hospitlinfocontainer";
 
 const hospitalinfo = () => {
   return (
-    <div>
-      hospitalinfo
-      <RevokeAccess />
-    </div>
+    <>
+      <Hospitlinfocontainer />
+    </>
   );
 };
 

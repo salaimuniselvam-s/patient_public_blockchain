@@ -1,18 +1,11 @@
 import React from "react";
-import RevokeAccess from "../components/RevokeAccess";
-import { useGlobalContext } from "../context";
+import Patientinfocontainer from "../components/patientinfocontainer";
 
 const patientInfo = () => {
-  const { user } = useGlobalContext();
-  if (user != 1) {
-    return <div>No Data</div>;
-  }
-
   return (
-    <div>
-      patientInfo
-      <RevokeAccess />
-    </div>
+    <>
+      <Patientinfocontainer />
+    </>
   );
 };
 
