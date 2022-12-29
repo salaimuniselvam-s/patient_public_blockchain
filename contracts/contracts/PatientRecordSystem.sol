@@ -31,12 +31,12 @@ contract PatientRecordSystem is Ownable {
         string description;
     }
     struct DoctorRecord {
-        string name;
+        bytes32 name;
         uint age;
-        string gender;
-        string Qualification;
-        string HospitalName;
-        string location;
+        bytes32 gender;
+        bytes32 Qualification;
+        bytes32 HospitalName;
+        bytes32 location;
         address addr;
     }
     struct PharmacyRecord {
@@ -53,8 +53,8 @@ contract PatientRecordSystem is Ownable {
     mapping(address => PharmacyRecord) pharmacyRecordDetails;
     PharmacyRecord[] pharmacyRecords;
 
-    mapping(address => mapping(address => bool)) hasAccessToDoctor;
-    mapping(address => mapping(address => bool)) hasAccessToPharmacy;
+    mapping(address => mapping(address => bool)) public hasAccessToDoctor;
+    mapping(address => mapping(address => bool)) public hasAccessToPharmacy;
 
     event PatientRecordsAdded(address Patient);
     event DoctorRecordsAdded(address Doctor);
@@ -197,7 +197,14 @@ contract PatientRecordSystem is Ownable {
             address(0),
             ""
         );
-        patientRecords.push(patient);
+        bool control = true;
+        for (uint i = 0; i < patientRecords.length; i++) {
+            if (patientRecords[i].addr == msg.sender) {
+                patientRecords[i] = patient;
+                control = false;
+            }
+        }
+        if (control) patientRecords.push(patient);
         patientRecordDetails[msg.sender] = patient;
         emit PatientRecordsAdded(msg.sender);
     }
@@ -212,12 +219,12 @@ contract PatientRecordSystem is Ownable {
     }
 
     function addDoctorRecord(
-        string memory name,
+        bytes32 name,
         uint age,
-        string memory gender,
-        string memory Qualification,
-        string memory HospitalName,
-        string memory location
+        bytes32 gender,
+        bytes32 Qualification,
+        bytes32 HospitalName,
+        bytes32 location
     ) public isDoctor(msg.sender) {
         DoctorRecord memory doctor = DoctorRecord(
             name,
@@ -228,7 +235,14 @@ contract PatientRecordSystem is Ownable {
             location,
             msg.sender
         );
-        doctorRecords.push(doctor);
+        bool control = true;
+        for (uint i = 0; i < doctorRecords.length; i++) {
+            if (doctorRecords[i].addr == msg.sender) {
+                doctorRecords[i] = doctor;
+                control = false;
+            }
+        }
+        if (control) doctorRecords.push(doctor);
         doctorRecordDetails[msg.sender] = doctor;
         emit DoctorRecordsAdded(msg.sender);
     }
@@ -253,10 +267,21 @@ contract PatientRecordSystem is Ownable {
             location,
             msg.sender
         );
-        pharmacyRecords.push(Pharmacy);
+        bool control = true;
+        for (uint i = 0; i < pharmacyRecords.length; i++) {
+            if (pharmacyRecords[i].addr == msg.sender) {
+                pharmacyRecords[i] = Pharmacy;
+                control = false;
+            }
+        }
+        if (control) pharmacyRecords.push(Pharmacy);
         pharmacyRecordDetails[msg.sender] = Pharmacy;
         emit PharmacyRecordsAdded(msg.sender);
     }
+
+    // function getPharmacyRecord() public isPharmacy(msg.sender) returns(uint) {
+    //   return 5;
+    // }
 
     function getPharmacyRecord()
         public

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Card } from "antd";
-const Doctorinfocontainer = ({
+import React from "react";
+import { Button, Card } from "antd";
+import { useGlobalContext } from "../context";
+const PatientsDoctorContainer = ({
   name,
   age,
   gender,
@@ -9,6 +10,11 @@ const Doctorinfocontainer = ({
   addr,
   location,
 }) => {
+  const { walletAddress, user } = useGlobalContext();
+  const GrantAccess = () => {
+    console.log("user");
+  };
+
   return (
     <>
       <Card className="bg-slate-300  w-full mt-3 ">
@@ -47,9 +53,16 @@ const Doctorinfocontainer = ({
             </label>
           </div>
         </div>
+        {user == 1 && (
+          <div className="flex justify-center mt-3">
+            <Button onClick={GrantAccess} className="bg-blue-500 text-white">
+              Access
+            </Button>
+          </div>
+        )}
       </Card>
     </>
   );
 };
 
-export default Doctorinfocontainer;
+export default PatientsDoctorContainer;

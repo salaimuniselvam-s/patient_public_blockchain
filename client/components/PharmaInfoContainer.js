@@ -1,11 +1,11 @@
-import { Card } from "antd";
 import React, { useState } from "react";
-const Pharmainfocontainer = () => {
+import { Card } from "antd";
+const PharmaInfoContainer = ({ name, street, location, addr }) => {
   const [object, setObject] = useState({
-    name: "Apollo",
-    street: "Street",
-    address: "Chennai",
-    location: "Near bus stand",
+    name,
+    street,
+    location,
+    addr,
   });
   return (
     <>
@@ -22,7 +22,7 @@ const Pharmainfocontainer = () => {
             </label>
             <label>
               <span>Address : </span>
-              <span className=" font-semibold text-lg">{object.address}</span>
+              <span className=" font-semibold text-lg">{object.addr}</span>
             </label>
             <label>
               <span>Location : </span>
@@ -35,4 +35,4 @@ const Pharmainfocontainer = () => {
   );
 };
 
-export default Pharmainfocontainer;
+export default PharmaInfoContainer;
