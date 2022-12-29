@@ -20,10 +20,10 @@ contract PatientRecordSystem is Ownable {
         Pharmacy
     }
     struct PatientRecord {
-        string name;
+        bytes32 name;
         uint age;
-        string gender;
-        string bloodGroup;
+        bytes32 gender;
+        bytes32 bloodGroup;
         address addr;
         uint timestamp;
         address updatedBy;
@@ -40,9 +40,9 @@ contract PatientRecordSystem is Ownable {
         address addr;
     }
     struct PharmacyRecord {
-        string name;
-        string street;
-        string location;
+        bytes32 name;
+        bytes32 street;
+        bytes32 location;
         address addr;
     }
     mapping(address => AccessControls) allowAccess;
@@ -181,10 +181,10 @@ contract PatientRecordSystem is Ownable {
     }
 
     function addPatientRecord(
-        string memory name,
+        bytes32 name,
         uint age,
-        string memory gender,
-        string memory bloodGroup
+        bytes32 gender,
+        bytes32 bloodGroup
     ) public isPatient(msg.sender) {
         PatientRecord memory patient = PatientRecord(
             name,
@@ -233,14 +233,19 @@ contract PatientRecordSystem is Ownable {
         emit DoctorRecordsAdded(msg.sender);
     }
 
-    // function getDoctorRecord() public isDoctor(msg.sender) view returns(DoctorRecord memory){
-    //   return doctorRecordDetails[msg.sender];
-    // }
+    function getDoctorRecord()
+        public
+        view
+        isDoctor(msg.sender)
+        returns (DoctorRecord memory)
+    {
+        return doctorRecordDetails[msg.sender];
+    }
 
     function addPharmacyRecord(
-        string memory name,
-        string memory street,
-        string memory location
+        bytes32 name,
+        bytes32 street,
+        bytes32 location
     ) public isPharmacy(msg.sender) {
         PharmacyRecord memory Pharmacy = PharmacyRecord(
             name,
@@ -253,9 +258,15 @@ contract PatientRecordSystem is Ownable {
         emit PharmacyRecordsAdded(msg.sender);
     }
 
-    // function getPharmacyRecord() public isPharmacy(msg.sender) view returns(PharmacyRecord memory){
-    //   return pharmacyRecordDetails[msg.sender];
-    // }
+    function getPharmacyRecord()
+        public
+        view
+        isPharmacy(msg.sender)
+        returns (PharmacyRecord memory)
+    {
+        return pharmacyRecordDetails[msg.sender];
+    }
+
     function getAllPatientRecords()
         public
         view

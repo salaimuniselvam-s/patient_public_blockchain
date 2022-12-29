@@ -1,11 +1,26 @@
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useGlobalContext } from "../context";
+import { ContractEnumState, Owner } from "../utils/ContractEnum";
 
 const Header = () => {
-  const { pathname } = useRouter();
-  const { walletAddress } = useGlobalContext();
+  const { user, walletAddress, setErrorMessage, setUser, contract } =
+    useGlobalContext();
+  useEffect(() => {
+    const updateUser = async () => {
+      try {
+        const registered = await contract.isRegistered();
+        const { enumState } = ContractEnumState(registered);
+        setUser(enumState);
+      } catch (error) {
+        console.error(error);
+        setErrorMessage(error);
+      }
+    };
+    if (contract && walletAddress) updateUser();
+  }, [contract, walletAddress]);
+
   return (
     <div>
       <nav className="bg-stone-800 py-2 md:py-4">
@@ -26,8 +41,85 @@ const Header = () => {
             className="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0"
             id="navbar-collapse"
           >
+            {/* Owners Header */}
+            {walletAddress == Owner && (
+              <>
+                <Link
+                  href="/AllPatients"
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                >
+                  Patients
+                </Link>
+                <Link
+                  href="/AllDoctors"
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                >
+                  Doctors
+                </Link>
+                <Link
+                  href="/AllPharmas"
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                >
+                  Pharmas
+                </Link>
+              </>
+            )}
+            {/* Patients Header */}
+            {user == 1 && (
+              <>
+                <Link
+                  href="/MyRecords"
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                >
+                  My Records
+                </Link>
+                <Link
+                  href="/Doctors"
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                >
+                  Doctors
+                </Link>
+                <Link
+                  href="/Pharma"
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                >
+                  Pharma
+                </Link>
+              </>
+            )}
+            {/* Doctor Header */}
+            {user == 2 && (
+              <>
+                <Link
+                  href="/DoctorDetails"
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                >
+                  My Details
+                </Link>
+                <Link
+                  href="/Patients"
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                >
+                  Patients
+                </Link>
+                <Link
+                  href="/Pharma"
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                >
+                  Pharma
+                </Link>
+              </>
+            )}
+            {/* Pharmacy Header */}
+            {user == 3 && (
+              <Link
+                href="/Pharma"
+                className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+              >
+                Pharma
+              </Link>
+            )}
             <div
-              href="/"
               className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
             >
               {walletAddress}

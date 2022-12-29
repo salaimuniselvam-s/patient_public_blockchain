@@ -16,10 +16,14 @@ function getChainID() {
 
 async function handleConnection(accounts) {
   if (accounts.length === 0) {
-    const fetchedAccounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-    return fetchedAccounts;
+    try {
+      const fetchedAccounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      return fetchedAccounts;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return accounts;
@@ -28,9 +32,13 @@ async function handleConnection(accounts) {
 async function requestAccount() {
   let currentAccount = 0x0;
   if (isEthereum() && getChainID() !== 0) {
-    let accounts = await window.ethereum.request({ method: "eth_accounts" });
-    accounts = await handleConnection(accounts);
-    currentAccount = accounts[0];
+    try {
+      let accounts = await window.ethereum.request({ method: "eth_accounts" });
+      accounts = await handleConnection(accounts);
+      currentAccount = accounts[0];
+    } catch (error) {
+      console.error(error);
+    }
   }
   return currentAccount;
 }
@@ -67,16 +75,20 @@ export const GetParams = async () => {
     response.step = 0;
     return response;
   }
-
-  const currentAccount = await requestAccount();
-  if (currentAccount === 0x0) {
+  let currentAccount;
+  try {
+    currentAccount = await requestAccount();
+  } catch (error) {
+    console.error(error);
+  }
+  if (currentAccount === 0x0 || currentAccount == undefined) {
     response.step = 1;
     return response;
   }
 
   response.account = currentAccount;
 
-  if (getChainID() !== 5) {
+  if (getChainID() !== 5 && getChainID() !== 31337) {
     response.step = 2;
     return response;
   }
@@ -104,7 +116,7 @@ export async function SwitchNetwork() {
       params: [{ chainId: "0x5" }],
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (error.code == 4902) {
       // let hex_chainId = ethers.utils.hexValue(5);
       await window?.ethereum
@@ -124,7 +136,7 @@ export async function SwitchNetwork() {
             },
           ],
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.error(error));
     }
   }
 }

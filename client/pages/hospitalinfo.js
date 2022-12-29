@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
+import RevokeAccess from "../components/RevokeAccess";
 
 const hospitalinfo = () => {
   return (
-    <div>hospitalinfo</div>
-  )
-}
+    <div>
+      hospitalinfo
+      <RevokeAccess />
+    </div>
+  );
+};
 
-export default hospitalinfo
+export default hospitalinfo;

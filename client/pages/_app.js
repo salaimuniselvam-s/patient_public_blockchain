@@ -3,6 +3,7 @@ import Head from "next/head";
 import Header from "../components/Header";
 import { GlobalContextProvider } from "../context";
 import OnboardModal from "../components/OnBoardModal";
+import "antd/dist/reset.css";
 
 function MyApp({ Component, pageProps }) {
   return (

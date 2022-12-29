@@ -1,9 +1,19 @@
-import React from 'react'
+import React from "react";
+import RevokeAccess from "../components/RevokeAccess";
+import { useGlobalContext } from "../context";
 
 const patientInfo = () => {
-  return (
-    <div>patientInfo</div>
-  )
-}
+  const { user } = useGlobalContext();
+  if (user != 1) {
+    return <div>No Data</div>;
+  }
 
-export default patientInfo
+  return (
+    <div>
+      patientInfo
+      <RevokeAccess />
+    </div>
+  );
+};
+
+export default patientInfo;

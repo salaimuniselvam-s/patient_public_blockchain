@@ -4,14 +4,20 @@ import Web3Modal from "web3modal";
 
 import { GetParams } from "../utils/Onboard.js";
 import { ABI, ADDRESS } from "../constants";
+import { OwnerPrivateKey } from "../utils/ContractEnum.js";
+import { notification } from "antd";
 
 const GlobalContext = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
+  const [api, contextHolder] = notification.useNotification();
   const [walletAddress, setWalletAddress] = useState("");
   const [contract, setContract] = useState(null);
+  const [ownerContract, setOwnerContract] = useState(null);
   const [provider, setProvider] = useState(null);
   const [step, setStep] = useState(1);
+  const [user, setUser] = useState(0);
+  const [notificationKey, setNotificationKey] = useState(1);
   const [showAlert, setShowAlert] = useState({
     status: false,
     type: "info",
@@ -40,7 +46,19 @@ export const GlobalContextProvider = ({ children }) => {
       method: "eth_accounts",
     });
 
-    if (accounts) setWalletAddress(`${accounts[0]}`);
+    if (accounts?.length > 0) {
+      setWalletAddress(`${accounts[0]}`);
+    } else {
+      const key = `${notificationKey}`;
+      notification.destroy(key);
+      api["error"]({
+        message: "You Haven't Login to Your Metamask",
+        description: "Please Login To Your Metamask & Try with Connect Account",
+        duration: 2,
+        key,
+      });
+      setNotificationKey(notificationKey + 1);
+    }
   };
 
   useEffect(() => {
@@ -50,19 +68,27 @@ export const GlobalContextProvider = ({ children }) => {
   //* Set the smart contract and provider to the state
   useEffect(() => {
     const setSmartContractAndProvider = async () => {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const newProvider = new ethers.providers.Web3Provider(connection);
-      const signer = newProvider.getSigner();
-      const newContract = new ethers.Contract(ADDRESS, ABI, signer);
-
-      setProvider(newProvider);
-      setContract(newContract);
+      try {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const newProvider = new ethers.providers.Web3Provider(connection);
+        const signer = newProvider.getSigner();
+        const { chainId } = await newProvider.getNetwork();
+        const address = ADDRESS[chainId] ? ADDRESS[chainId][0] : "";
+        const newContract = new ethers.Contract(address, ABI, signer);
+        const wallet = new ethers.Wallet(OwnerPrivateKey, newProvider);
+        const ownerContract = new ethers.Contract(address, ABI, wallet);
+        setProvider(newProvider);
+        setContract(newContract);
+        setOwnerContract(ownerContract);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     setSmartContractAndProvider();
     updateCurrentWalletAddress();
-  }, []);
+  }, [walletAddress]);
 
   //* Handle alerts
   useEffect(() => {
@@ -88,6 +114,12 @@ export const GlobalContextProvider = ({ children }) => {
           type: "failure",
           message: parsedErrorMessage,
         });
+      } else {
+        setShowAlert({
+          status: true,
+          type: "failure",
+          message: errorMessage.reason,
+        });
       }
     }
   }, [errorMessage]);
@@ -102,8 +134,14 @@ export const GlobalContextProvider = ({ children }) => {
         setShowAlert,
         errorMessage,
         setErrorMessage,
+        provider,
+        step,
+        user,
+        setUser,
+        ownerContract,
       }}
     >
+      {contextHolder}
       {children}
     </GlobalContext.Provider>
   );
