@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ant-modal-content{
+  background-color: slategray !important;
+}
+.ant-modal-header{
+    background-color: slategrey !important;
+}

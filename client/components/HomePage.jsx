@@ -38,7 +38,7 @@ const HomePage = () => {
   return (
     <div className="px-12 py-12  ">
       {contextHolder}
-      <div>Patient Record System</div>
+      <div className=" text-lg">Patient Record System</div>
       <div className="my-3 w-full">
         <select
           placeholder="Join Network"
