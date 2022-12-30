@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "../context";
 import HomePage from "../components/HomePage";
-import { ContractEnumState } from "../utils/ContractEnum";
+import { ContractEnumState, Owner } from "../utils/ContractEnum";
 import CustomButton from "../components/CustomButton";
 import { Modal } from "antd";
 import { useRouter } from "next/router";
@@ -24,9 +24,22 @@ export default function Home() {
   useEffect(() => {
     if (walletAddress && contract) requestUserDetails();
   }, [walletAddress, contract]);
-  console.log(user);
   const Controller = () => {
-    if (user == 1) {
+    if (walletAddress == Owner) {
+      return (
+        <>
+          <div className="text-slate-100 mb-5 ml-20">Welcome Admin</div>
+          <span className="ml-20">
+            {" "}
+            <CustomButton
+              title="Click To View All Registered Patients"
+              handleClick={() => router.push("/AllPatients")}
+              restStyle="my-3 flex justify-center"
+            />
+          </span>
+        </>
+      );
+    } else if (user == 1) {
       return (
         <>
           <div className="text-slate-100 mb-5 ml-20">
@@ -62,7 +75,7 @@ export default function Home() {
       return (
         <>
           <div className="text-slate-100 mb-5 ml-20">
-            Your Pharma Details are Registered.
+            You are Registered as Pharmacy.
           </div>
           <span className="ml-20">
             {" "}

@@ -84,13 +84,11 @@ const PharmaInfoContainer = ({
           <Form.Item name="addr" label="Address">
             <Input readOnly />
           </Form.Item>
-          <Button
-            className="bg-blue-500  float-right"
-            type="primary"
-            htmlType="submit"
-          >
-            Update
-          </Button>
+          <div className="flex justify-center mb-3">
+            <Button className="bg-blue-500 " type="primary" htmlType="submit">
+              Update
+            </Button>
+          </div>
         </Form>
       </Modal>
     </>

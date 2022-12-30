@@ -11,6 +11,7 @@ error UnauthorizedRole();
 error NotRegisteredAsPatient();
 error NotRegisteredAsDoctor();
 error NotRegisteredAsPharmacy();
+error OwnerCannotJoinasParticipant();
 
 contract PatientRecordSystem is Ownable {
     enum AccessControls {
@@ -52,7 +53,7 @@ contract PatientRecordSystem is Ownable {
     DoctorRecord[] doctorRecords;
     mapping(address => PharmacyRecord) pharmacyRecordDetails;
     PharmacyRecord[] pharmacyRecords;
-    address[] public pharmacyAddress;
+    // address[] public  pharmacyAddress;
 
     mapping(address => mapping(address => bool)) public hasAccessToDoctor;
     mapping(address => mapping(address => bool)) public hasAccessToPharmacy;
@@ -74,6 +75,7 @@ contract PatientRecordSystem is Ownable {
             revert AlreadyRegisteredAsDoctor();
         if (allowAccess[_addr] == AccessControls.Pharmacy)
             revert AlreadyRegisteredAsPharmacy();
+        if (owner() == _addr) revert OwnerCannotJoinasParticipant();
         _;
     }
 
@@ -197,7 +199,7 @@ contract PatientRecordSystem is Ownable {
         uint age,
         bytes32 gender,
         bytes32 bloodGroup
-    ) public returns (bool) {
+    ) internal returns (bool) {
         bool control = true;
         for (uint i = 0; i < patientRecords.length; i++) {
             if (patientRecords[i].addr == msg.sender) {
@@ -209,8 +211,8 @@ contract PatientRecordSystem is Ownable {
                     msg.sender,
                     block.timestamp,
                     msg.sender,
-                    address(0),
-                    ""
+                    patientRecords[i].pharmacy,
+                    patientRecords[i].description
                 );
                 patientRecords[i] = patient;
                 patientRecordDetails[msg.sender] = patient;
@@ -322,7 +324,7 @@ contract PatientRecordSystem is Ownable {
         }
         if (control) {
             pharmacyRecords.push(Pharmacy);
-            pharmacyAddress.push(msg.sender);
+            // pharmacyAddress.push(msg.sender);
         }
         pharmacyRecordDetails[msg.sender] = Pharmacy;
         emit PharmacyRecordsAdded(msg.sender);

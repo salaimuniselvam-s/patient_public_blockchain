@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../context";
 import { parseString } from "../utils/ContractEnum";
 import PatientsPharmaInfoContainer from "../components/PatientsPharmaInfoContainer";
+import { message } from "antd";
 
 const Pharma = () => {
   const { user, contract, walletAddress } = useGlobalContext();
