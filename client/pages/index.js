@@ -41,6 +41,38 @@ export default function Home() {
           </span>
         </>
       );
+    } else if (user == 2) {
+      return (
+        <>
+          <div className="text-slate-100 mb-5 ml-20">
+            You are Registered as Doctor
+          </div>
+          <span className="ml-20">
+            {" "}
+            <CustomButton
+              title="Click Here to View Your Records"
+              handleClick={() => router.push("/DoctorDetails")}
+              restStyle="my-3 flex justify-center"
+            />
+          </span>
+        </>
+      );
+    } else if (user == 3) {
+      return (
+        <>
+          <div className="text-slate-100 mb-5 ml-20">
+            Your Pharma Details are Registered.
+          </div>
+          <span className="ml-20">
+            {" "}
+            <CustomButton
+              title="Click Here to View Your Records"
+              handleClick={() => router.push("/MyPharma")}
+              restStyle="my-3 flex justify-center"
+            />
+          </span>
+        </>
+      );
     } else {
       return (
         <>
