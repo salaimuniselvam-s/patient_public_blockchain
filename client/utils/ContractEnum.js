@@ -39,8 +39,8 @@ export const ContractEnumState = (value) => {
   return state[value];
 };
 export const OwnerPrivateKey =
-  "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-export const Owner = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
+  "a2f5823bba6f2e93283337c56e826a3ea143fadcf27daf67a1a83139b7f6a384";
+export const Owner = "0x3dd675dbEFb0bB31E7648864cEB437e4A62ddEb2";
 export const formatString = (input) => ethers.utils.formatBytes32String(input);
 export const parseString = (input) => ethers.utils.parseBytes32String(input);
 export const parseInteger = (input) => input?.toString();

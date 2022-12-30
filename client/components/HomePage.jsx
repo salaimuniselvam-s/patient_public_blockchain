@@ -15,7 +15,8 @@ const HomePage = ({ setCloseModal }) => {
   const [desc, setDesc] = useState(1);
   const [modal, setModal] = useState(false);
 
-  const requestAccess = async (result, AddPerson) => {
+  const requestAccess = async (result, AddPerson, setLoading) => {
+    setLoading(true);
     try {
       const tx = await ownerContract.authorizeUser(walletAddress, desc);
       await tx.wait(1);
@@ -30,6 +31,7 @@ const HomePage = ({ setCloseModal }) => {
       AddPerson(result, setModal, setCloseModal);
     } catch (error) {
       console.error(error);
+      setLoading(false);
       api["error"]({
         message: "Request Access Failed",
         description: error.reason,

@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../context";
 import { parseDate, parseInteger, parseString } from "../utils/ContractEnum";
 import Patientinfocontainer from "../components/patientinfocontainer";
-import { message } from "antd";
+import { Spin, message } from "antd";
 
 const PharmaPatients = () => {
   const { user, contract, walletAddress } = useGlobalContext();
   const [Patients, setPatients] = useState([]);
+  const [loader, setLoader] = useState(false);
 
   const getAllPatientRecords = async () => {
+    setLoader(true);
     try {
       const records = await contract.getPatientsOfPharmacy();
       const output = records?.map((data) => {
@@ -29,14 +31,28 @@ const PharmaPatients = () => {
       setPatients(output);
     } catch (error) {
       message.error(`Get Patients Of Pharmacy Failed.. `);
+    } finally {
+      setLoader(false);
     }
   };
   useEffect(() => {
     if (contract && walletAddress) getAllPatientRecords();
   }, [walletAddress]);
+
   if (user != 3) {
     return <div>No Data</div>;
   }
+
+  if (loader) {
+    return (
+      <div className=" mt-32 all-data-loader">
+        <Spin tip="Data is being Fetched.." size="large">
+          <div className="content" />
+        </Spin>
+      </div>
+    );
+  }
+
   return (
     <div className="px-6 py-3">
       {Patients.map((data, key) => {

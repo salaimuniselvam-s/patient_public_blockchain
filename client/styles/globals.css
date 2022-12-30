@@ -34,3 +34,17 @@
   position: relative !important;
   height: unset !important;
 }
+.ant-spin-dot-item {
+  background-color: #ffffff !important;
+}
+.all-data-loader .ant-spin-dot-item {
+  background-color: #127fe6 !important;
+}
+.ant-message {
+  position: absolute !important;
+  width: fit-content !important;
+  bottom: initial !important;
+  top: 10px !important;
+  right: 0px !important;
+  left: initial !important;
+}

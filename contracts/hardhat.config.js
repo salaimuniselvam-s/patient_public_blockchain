@@ -30,7 +30,7 @@ module.exports = {
             url: GOERLI_RPC_URL,
             accounts: [PRIVATE_KEY],
             chainId: 5,
-            blockConfirmations: 6
+            blockConfirmations: 2
         }
     },
     solidity: {
@@ -44,8 +44,8 @@ module.exports = {
         ]
     },
     etherscan: {
-        apiKey: ETHERSCAN_API_KEY
-        // customChains: [], // uncomment this line if you are getting a TypeError: customChains is not iterable
+        apiKey: { goerli: ETHERSCAN_API_KEY },
+        customChains: [] // uncomment this line if you are getting a TypeError: customChains is not iterable
     },
     gasReporter: {
         enabled: true,

@@ -1,5 +1,5 @@
-import { Button, Form, Input, Select, notification } from "antd";
-import React from "react";
+import { Button, Form, Input, Select, Spin, notification } from "antd";
+import React, { useState } from "react";
 import { useGlobalContext } from "../context";
 import { formatString } from "../utils/ContractEnum";
 export const formItemLayout = {
@@ -16,8 +16,9 @@ const PatientRegister = ({ requestAccess }) => {
   const { contract } = useGlobalContext();
   const [api, contextHolder] = notification.useNotification();
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
   const onFinish = (result) => {
-    requestAccess(result, AddPatient);
+    requestAccess(result, AddPatient, setLoading);
   };
   const AddPatient = async (
     { name, age, gender, blood },
@@ -48,6 +49,7 @@ const PatientRegister = ({ requestAccess }) => {
         duration: 2,
       });
     }
+    setLoading(false);
   };
   return (
     <div className="mt-6 mb-1">
@@ -74,7 +76,7 @@ const PatientRegister = ({ requestAccess }) => {
           type="primary"
           htmlType="submit"
         >
-          Submit
+          {loading ? <Spin size="small" /> : "Submit"}
         </Button>
       </Form>
     </div>

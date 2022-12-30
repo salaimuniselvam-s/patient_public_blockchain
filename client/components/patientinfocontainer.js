@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Card, Form, Input, Modal } from "antd";
+import { Button, Card, Form, Input, Modal, Spin } from "antd";
 import { formItemLayout } from "./PatientRegister";
 const Patientinfocontainer = ({
   id,
@@ -18,9 +18,10 @@ const Patientinfocontainer = ({
 }) => {
   const [form] = Form.useForm();
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onFinish = (value) => {
-    updateRecords(value, setModal);
+    updateRecords(value, setModal, setLoading);
   };
   const openModal = () => {
     setModal(true);
@@ -96,7 +97,7 @@ const Patientinfocontainer = ({
         )}
       </Card>
       <Modal
-        title="Update Personal Data"
+        title={isDoctor ? "Update Patient Details" : "Update Personal Details"}
         open={modal}
         width="60vw"
         onCancel={() => setModal(false)}
@@ -134,7 +135,7 @@ const Patientinfocontainer = ({
           </Form.Item>
           <div className="flex justify-center mb-3">
             <Button className="bg-blue-500 " type="primary" htmlType="submit">
-              Update
+              {loading ? <Spin size="small" /> : "Update"}
             </Button>
           </div>
         </Form>

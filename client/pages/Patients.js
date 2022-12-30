@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../context";
-import {
-  Owner,
-  formatString,
-  parseDate,
-  parseInteger,
-  parseString,
-} from "../utils/ContractEnum";
+import { parseDate, parseInteger, parseString } from "../utils/ContractEnum";
 import Patientinfocontainer from "../components/patientinfocontainer";
-import { message } from "antd";
+import { Spin, message } from "antd";
 
 const Patients = () => {
   const { user, contract, walletAddress } = useGlobalContext();
   const [Patients, setPatients] = useState([]);
+  const [loader, setLoader] = useState(false);
 
   const getPatientsOfDoctors = async () => {
+    setLoader(true);
     try {
       const records = await contract.getPatientsOfDoctors();
       const output = records?.map((data) => {
@@ -35,13 +31,20 @@ const Patients = () => {
       setPatients(output);
     } catch (error) {
       message.error(`Get Patients Of Doctors Failed..`);
+    } finally {
+      setLoader(false);
     }
   };
   useEffect(() => {
     if (contract && walletAddress) getPatientsOfDoctors();
   }, [walletAddress]);
 
-  const updateRecords = async ({ addr, pharmacy, description }, setModal) => {
+  const updateRecords = async (
+    { addr, pharmacy, description },
+    setModal,
+    setLoading
+  ) => {
+    setLoading(true);
     try {
       const tx = await contract.modifyPatientRecord(
         addr,
@@ -54,12 +57,25 @@ const Patients = () => {
       message.success(`Record Successfully Updated`);
     } catch (error) {
       message.error(`Record Update Failed.. Please Try Again..`);
+    } finally {
+      setLoading(false);
     }
   };
 
   if (user != 2) {
     return <div>No Data</div>;
   }
+
+  if (loader) {
+    return (
+      <div className=" mt-32 all-data-loader">
+        <Spin tip="Data is being Fetched.." size="large">
+          <div className="content" />
+        </Spin>
+      </div>
+    );
+  }
+
   return (
     <div className="px-6 py-3">
       {Patients.map((data, key) => {

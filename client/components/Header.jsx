@@ -44,7 +44,8 @@ const Header = () => {
             id="navbar-collapse"
           >
             {/* Owners Header */}
-            {walletAddress == Owner && (
+            {walletAddress.toString().toLowerCase() ==
+              Owner.toString().toLowerCase() && (
               <>
                 <Link
                   href="/AllPatients"

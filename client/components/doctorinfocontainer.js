@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Card, Form, Input, Modal } from "antd";
+import { Button, Card, Form, Input, Modal, Spin } from "antd";
 import { formItemLayout } from "./PatientRegister";
 const Doctorinfocontainer = ({
   name,
@@ -11,12 +11,14 @@ const Doctorinfocontainer = ({
   location,
   updateRecords,
   user,
+  id,
 }) => {
   const [form] = Form.useForm();
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onFinish = (value) => {
-    updateRecords(value, setModal);
+    updateRecords(value, setModal, setLoading);
   };
   const openModal = () => {
     setModal(true);
@@ -32,9 +34,9 @@ const Doctorinfocontainer = ({
   };
   return (
     <>
-      <Card className="bg-slate-300 text-xl w-full mt-2 ">
+      <Card className="bg-slate-300 text-xl w-full mt-1 ">
         <div>
-          <div></div>
+          <div className=" text-2xl font-bold mb-1">Doctor Id : {id}</div>
           <div className="grid grid-cols-2 gap-2 justify-between">
             <label>
               <span>Name : </span>
@@ -71,7 +73,7 @@ const Doctorinfocontainer = ({
                 onClick={openModal}
                 className="px-4 py-1 rounded-lg bg-blue-600 w-fit  font-bold hover text-white"
               >
-                Update
+                {loading ? <Spin size="small" /> : "Update"}
               </Button>
             </div>
           )}
@@ -113,7 +115,7 @@ const Doctorinfocontainer = ({
           </Form.Item>
           <div className="flex justify-center mb-3">
             <Button className="bg-blue-500" type="primary" htmlType="submit">
-              Update
+              {loading ? <Spin size="small" /> : "Update"}
             </Button>
           </div>
         </Form>

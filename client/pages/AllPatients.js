@@ -7,13 +7,15 @@ import {
   parseString,
 } from "../utils/ContractEnum";
 import Patientinfocontainer from "../components/patientinfocontainer";
-import { message } from "antd";
+import { Spin, message } from "antd";
 
 const AllPatients = () => {
   const { user, contract, walletAddress } = useGlobalContext();
   const [Patients, setPatients] = useState([]);
+  const [loader, setLoader] = useState(false);
 
   const getAllPatientRecords = async () => {
+    setLoader(true);
     try {
       const records = await contract.getAllPatientRecords();
       const output = records?.map((data) => {
@@ -34,14 +36,28 @@ const AllPatients = () => {
       setPatients(output);
     } catch (error) {
       message.error("Get All Patients Failed");
+    } finally {
+      setLoader(false);
     }
   };
   useEffect(() => {
     if (contract && walletAddress) getAllPatientRecords();
   }, [walletAddress]);
 
-  if (walletAddress != Owner) {
+  if (
+    walletAddress.toString().toLowerCase() != Owner.toString().toLowerCase()
+  ) {
     return <div>No Data</div>;
+  }
+
+  if (loader) {
+    return (
+      <div className=" mt-32 all-data-loader">
+        <Spin tip="Data is being Fetched.." size="large">
+          <div className="content" />
+        </Spin>
+      </div>
+    );
   }
 
   return (

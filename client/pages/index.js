@@ -3,7 +3,7 @@ import { useGlobalContext } from "../context";
 import HomePage from "../components/HomePage";
 import { ContractEnumState, Owner } from "../utils/ContractEnum";
 import CustomButton from "../components/CustomButton";
-import { Modal } from "antd";
+import { Modal, Spin } from "antd";
 import { useRouter } from "next/router";
 import Image from "next/image";
 export default function Home() {
@@ -11,7 +11,9 @@ export default function Home() {
   const { contract, walletAddress, setErrorMessage, user, setUser } =
     useGlobalContext();
   const [modal, setModal] = useState(false);
+  const [loader, setLoader] = useState(false);
   const requestUserDetails = async () => {
+    setLoader(true);
     try {
       const registered = await contract.isRegistered();
       const { enumState } = ContractEnumState(registered);
@@ -19,13 +21,26 @@ export default function Home() {
     } catch (error) {
       console.error(error);
       setErrorMessage(error);
+    } finally {
+      setLoader(false);
     }
   };
   useEffect(() => {
     if (walletAddress && contract) requestUserDetails();
   }, [walletAddress, contract]);
+
   const Controller = () => {
-    if (walletAddress == Owner) {
+    if (loader) {
+      return (
+        <div>
+          <Spin size="large">
+            <div className="content" />
+          </Spin>
+        </div>
+      );
+    } else if (
+      walletAddress.toString().toLowerCase() == Owner.toString().toLowerCase()
+    ) {
       return (
         <>
           <div className="text-slate-100 mb-5 ml-20">Welcome Admin</div>

@@ -7,13 +7,15 @@ import {
   parseString,
 } from "../utils/ContractEnum";
 import Patientinfocontainer from "../components/patientinfocontainer";
-import { message } from "antd";
+import { Spin, message } from "antd";
 
 const MyRecords = () => {
   const { user, contract, walletAddress } = useGlobalContext();
   const [Patients, setPatients] = useState([]);
+  const [loader, setLoader] = useState(false);
 
   const getPatientRecords = async () => {
+    setLoader(true);
     try {
       const data = await contract.getPatientRecord();
       let patient = {
@@ -31,13 +33,20 @@ const MyRecords = () => {
       setPatients([patient]);
     } catch (error) {
       message.error(`Get Patient Record Failed..`);
+    } finally {
+      setLoader(false);
     }
   };
   useEffect(() => {
     if (contract && walletAddress) getPatientRecords();
   }, [walletAddress]);
 
-  const updateRecords = async ({ name, age, gender, blood }, setModal) => {
+  const updateRecords = async (
+    { name, age, gender, blood },
+    setModal,
+    setLoading
+  ) => {
+    setLoading(true);
     try {
       const tx = await contract.addPatientRecord(
         formatString(name),
@@ -51,11 +60,24 @@ const MyRecords = () => {
       message.success(`Record Successfully Updated`);
     } catch (error) {
       message.error(`Record Update Failed.. Please Try Again..`);
+    } finally {
+      setLoading(false);
     }
   };
+
   if (user != 1) {
     return <div>No Data</div>;
   }
+  if (loader) {
+    return (
+      <div className=" mt-32 all-data-loader">
+        <Spin tip="Data is being Fetched.." size="large">
+          <div className="content" />
+        </Spin>
+      </div>
+    );
+  }
+
   return (
     <div className="px-6 py-3">
       {Patients.map((data, key) => {
