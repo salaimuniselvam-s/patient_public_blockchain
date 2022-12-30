@@ -1,31 +1,45 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card } from "antd";
+import { Button, Card, message } from "antd";
 import { useGlobalContext } from "../context";
 const PatientsPharmaInfoContainer = ({ name, street, location, addr }) => {
   const { contract, walletAddress, user } = useGlobalContext();
   const [control, setControl] = useState(false);
   const RevokeAccess = async () => {
-    const tx = await contract.revokeAccessToPharmacy(addr);
-    await tx.wait(1);
+    try {
+      const tx = await contract.revokeAccessToPharmacy(addr);
+      await tx.wait(1);
+      message.success(`Access Revoked From Pharmacy(${addr})`);
+    } catch (error) {
+      message.error("Access Revoke Failed.. Please Try Again");
+    }
     hasAccess();
   };
   const GrantAccess = async () => {
-    const tx = await contract.allowAccessToPharmacy(addr);
-    await tx.wait(1);
+    try {
+      const tx = await contract.allowAccessToPharmacy(addr);
+      await tx.wait(1);
+      message.success(`Access Granted To Pharmacy(${addr})`);
+    } catch (error) {
+      message.error("Access Granting Failed.. Please Try Again");
+    }
     hasAccess();
   };
   const hasAccess = async () => {
-    const control = await contract.hasAccessToPharmacy(addr, walletAddress);
-    setControl(control);
+    try {
+      const control = await contract.hasAccessToPharmacy(addr, walletAddress);
+      setControl(control);
+    } catch (error) {
+      message.error("Validating Access To Pharmacy Failed..");
+    }
   };
   useEffect(() => {
     if (walletAddress && addr) hasAccess();
   }, [walletAddress, addr]);
   return (
     <>
-      <Card className="bg-slate-300  w-full mt-3 ">
-        <div className="flex  justify-evenly">
-          <div className="flex  flex-col mr-6">
+      <Card className="bg-slate-300 text-xl  w-full mt-3 ">
+        <div>
+          <div className="grid grid-cols-2 gap-2 justify-between">
             <label>
               <span>Name : </span>
               <span className=" font-semibold text-lg">{name}</span>

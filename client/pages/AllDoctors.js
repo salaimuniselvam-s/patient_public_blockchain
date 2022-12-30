@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../context";
 import { Owner, parseInteger, parseString } from "../utils/ContractEnum";
 import Doctorinfocontainer from "../components/doctorinfocontainer";
+import { message } from "antd";
 
 const AllDoctors = () => {
   const { user, contract, walletAddress } = useGlobalContext();
   const [Doctors, setDoctors] = useState([]);
 
   const getAllDoctorRecords = async () => {
-    const records = await contract.getAllDoctorRecords();
+    try{
+      const records = await contract.getAllDoctorRecords();
     const output = records?.map((data) => {
       let doctor = {
         name: parseString(data["name"]),
@@ -23,6 +25,9 @@ const AllDoctors = () => {
       return doctor;
     });
     setDoctors(output);
+    } catch(error){
+      message.error("Get All Doctor Records Failed")
+    }
   };
   useEffect(() => {
     if (contract && walletAddress) getAllDoctorRecords();

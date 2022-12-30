@@ -2,27 +2,32 @@ import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../context";
 import { parseInteger, parseString } from "../utils/ContractEnum";
 import PatientsDoctorContainer from "../components/PatientsDoctorsContainer";
+import { message } from "antd";
 
 const Doctors = () => {
   const { user, contract, walletAddress } = useGlobalContext();
   const [Doctors, setDoctors] = useState([]);
 
   const getAllDoctorRecords = async () => {
-    const records = await contract.getAllDoctorRecords();
-    const output = records?.map((data) => {
-      let doctor = {
-        name: parseString(data["name"]),
-        age: parseInteger(data["age"]),
-        gender: parseString(data["gender"]),
-        qualification: parseString(data["Qualification"]),
-        addr: data["addr"],
-        hospitalname: parseString(data["HospitalName"]),
-        location: parseString(data["location"]),
-      };
+    try {
+      const records = await contract.getAllDoctorRecords();
+      const output = records?.map((data) => {
+        let doctor = {
+          name: parseString(data["name"]),
+          age: parseInteger(data["age"]),
+          gender: parseString(data["gender"]),
+          qualification: parseString(data["Qualification"]),
+          addr: data["addr"],
+          hospitalname: parseString(data["HospitalName"]),
+          location: parseString(data["location"]),
+        };
 
-      return doctor;
-    });
-    setDoctors(output);
+        return doctor;
+      });
+      setDoctors(output);
+    } catch (error) {
+      message.error(`Get All Doctors Record Failed..`);
+    }
   };
   useEffect(() => {
     if (contract && walletAddress) getAllDoctorRecords();

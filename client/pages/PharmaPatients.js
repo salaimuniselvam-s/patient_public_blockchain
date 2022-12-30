@@ -2,29 +2,34 @@ import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../context";
 import { parseDate, parseInteger, parseString } from "../utils/ContractEnum";
 import Patientinfocontainer from "../components/patientinfocontainer";
+import { message } from "antd";
 
 const PharmaPatients = () => {
   const { user, contract, walletAddress } = useGlobalContext();
   const [Patients, setPatients] = useState([]);
 
   const getAllPatientRecords = async () => {
-    const records = await contract.getPatientsOfPharmacy();
-    const output = records?.map((data) => {
-      let patient = {
-        name: parseString(data["name"]),
-        age: parseInteger(data["age"]),
-        gender: parseString(data["gender"]),
-        blood: parseString(data["bloodGroup"]),
-        addr: data["addr"],
-        timestamp: parseDate(data["timestamp"]),
-        updatedby: data["updatedBy"],
-        pharmacy: data["pharmacy"],
-        description: data["description"],
-      };
+    try {
+      const records = await contract.getPatientsOfPharmacy();
+      const output = records?.map((data) => {
+        let patient = {
+          name: parseString(data["name"]),
+          age: parseInteger(data["age"]),
+          gender: parseString(data["gender"]),
+          blood: parseString(data["bloodGroup"]),
+          addr: data["addr"],
+          timestamp: parseDate(data["timestamp"]),
+          updatedby: data["updatedBy"],
+          pharmacy: data["pharmacy"],
+          description: data["description"],
+        };
 
-      return patient;
-    });
-    setPatients(output);
+        return patient;
+      });
+      setPatients(output);
+    } catch (error) {
+      message.error(`Get Patients Of Pharmacy Failed.. `);
+    }
   };
   useEffect(() => {
     if (contract && walletAddress) getAllPatientRecords();

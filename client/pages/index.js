@@ -5,6 +5,7 @@ import { ContractEnumState } from "../utils/ContractEnum";
 import CustomButton from "../components/CustomButton";
 import { Modal } from "antd";
 import { useRouter } from "next/router";
+import Image from "next/image";
 export default function Home() {
   const router = useRouter();
   const { contract, walletAddress, setErrorMessage, user, setUser } =
@@ -71,9 +72,17 @@ export default function Home() {
         </div>
 
         <div
-          className="w-1/2 bg-slate-800  pb-16"
-          style={{ clipPath: "polygon(100% 0%,100% 100%, 0% 100%, 0% 100%)" }}
-        ></div>
+          className="w-1/2 pt-8  pb-16"
+          // style={{ clipPath: "polygon(100% 0%,100% 100%, 0% 100%, 0% 100%)" }}
+        >
+          <Image
+            src={"/Doctors.png"}
+            alt="Doctor Picture"
+            className="image"
+            width={500}
+            height={500}
+          />
+        </div>
       </div>
       <Modal
         title={"Request Access"}

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button, Card, Form, Input, Modal } from "antd";
+import { formItemLayout } from "./PatientRegister";
 const Patientinfocontainer = ({
   id,
   name,
@@ -37,11 +38,11 @@ const Patientinfocontainer = ({
   };
   return (
     <>
-      <Card className="bg-slate-300 text-xl  w-full mt-3 ">
-        <div className=" text-2xl font-bold">Patient Id : {id}</div>
+      <Card className="bg-slate-300 text-xl  w-full mt-2 ">
+        <div className=" text-2xl font-bold mb-1">Patient Id : {id}</div>
         <div>
           <div></div>
-          <div className="grid grid-cols-2 gap-4 justify-between">
+          <div className="grid grid-cols-2 gap-2 justify-between">
             <label>
               <span>Name : </span>
               <span className=" font-semibold text-lg">{name}</span>
@@ -89,20 +90,24 @@ const Patientinfocontainer = ({
               onClick={openModal}
               className="px-4 py-1 rounded-lg bg-blue-600 w-fit  font-bold hover text-white"
             >
-              Update
+              {isDoctor ? "Prescribe" : "Update"}
             </Button>
           </div>
         )}
       </Card>
       <Modal
         title="Update Personal Data"
-        className=" bg-slate-500"
         open={modal}
         width="60vw"
         onCancel={() => setModal(false)}
         footer={null}
       >
-        <Form onFinish={onFinish} form={form} name="PatientRecords">
+        <Form
+          {...formItemLayout}
+          onFinish={onFinish}
+          form={form}
+          name="PatientRecords"
+        >
           <Form.Item name="name" label="Name">
             <Input readOnly={isDoctor} />
           </Form.Item>
@@ -127,9 +132,11 @@ const Patientinfocontainer = ({
           <Form.Item name="addr" label="Address">
             <Input readOnly />
           </Form.Item>
-          <Button className="bg-blue-500" type="primary" htmlType="submit">
-            Update
-          </Button>
+          <div className="flex justify-center mb-3">
+            <Button className="bg-blue-500 " type="primary" htmlType="submit">
+              Update
+            </Button>
+          </div>
         </Form>
       </Modal>
     </>

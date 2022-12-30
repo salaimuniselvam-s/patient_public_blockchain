@@ -2,24 +2,29 @@ import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../context";
 import { Owner, parseString } from "../utils/ContractEnum";
 import PharmaInfoContainer from "../components/PharmaInfoContainer";
+import { message } from "antd";
 
 const AllPharmas = () => {
   const { user, contract, walletAddress } = useGlobalContext();
   const [Pharmas, setPharmas] = useState([]);
 
   const getAllPharmaRecords = async () => {
-    const records = await contract.getAllPharmacyRecords();
-    const output = records?.map((data) => {
-      let Pharma = {
-        name: parseString(data["name"]),
-        street: parseString(data["street"]),
-        addr: data["addr"],
-        location: parseString(data["location"]),
-      };
+    try {
+      const records = await contract.getAllPharmacyRecords();
+      const output = records?.map((data) => {
+        let Pharma = {
+          name: parseString(data["name"]),
+          street: parseString(data["street"]),
+          addr: data["addr"],
+          location: parseString(data["location"]),
+        };
 
-      return Pharma;
-    });
-    setPharmas(output);
+        return Pharma;
+      });
+      setPharmas(output);
+    } catch (error) {
+      message.error("Get All Phama Records Failed");
+    }
   };
   useEffect(() => {
     if (contract && walletAddress) getAllPharmaRecords();

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button, Card, Form, Input, Modal } from "antd";
+import { formItemLayout } from "./PatientRegister";
 const PharmaInfoContainer = ({
   name,
   street,
@@ -25,9 +26,9 @@ const PharmaInfoContainer = ({
   };
   return (
     <>
-      <Card className="bg-slate-300  w-full mt-3 ">
-        <div className="flex  justify-evenly">
-          <div className="flex  flex-col mr-6">
+      <Card className="bg-slate-300 text-xl  w-full mt-3 ">
+        <div>
+          <div className="grid grid-cols-2 gap-2 justify-between">
             <label>
               <span>Name : </span>
               <span className=" font-semibold text-lg">{name}</span>
@@ -47,7 +48,7 @@ const PharmaInfoContainer = ({
           </div>
         </div>
         {user == 3 && (
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-3">
             <Button
               onClick={openModal}
               className="px-4 py-1 rounded-lg bg-blue-600 w-fit  font-bold hover text-white"
@@ -59,13 +60,18 @@ const PharmaInfoContainer = ({
       </Card>
       <Modal
         title="Update Personal Data"
-        className=" bg-slate-500"
         open={modal}
         width="60vw"
+        height="auto"
         onCancel={() => setModal(false)}
         footer={null}
       >
-        <Form onFinish={onFinish} form={form} name="PatientRecords">
+        <Form
+          {...formItemLayout}
+          onFinish={onFinish}
+          form={form}
+          name="PatientRecords"
+        >
           <Form.Item name="name" label="Name">
             <Input />
           </Form.Item>
@@ -78,7 +84,11 @@ const PharmaInfoContainer = ({
           <Form.Item name="addr" label="Address">
             <Input readOnly />
           </Form.Item>
-          <Button className="bg-blue-500" type="primary" htmlType="submit">
+          <Button
+            className="bg-blue-500  float-right"
+            type="primary"
+            htmlType="submit"
+          >
             Update
           </Button>
         </Form>

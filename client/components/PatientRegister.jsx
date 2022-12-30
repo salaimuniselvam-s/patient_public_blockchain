@@ -2,7 +2,7 @@ import { Button, Form, Input, Select, notification } from "antd";
 import React from "react";
 import { useGlobalContext } from "../context";
 import { formatString } from "../utils/ContractEnum";
-const formItemLayout = {
+export const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
     sm: { span: 4 },
