@@ -52,6 +52,7 @@ contract PatientRecordSystem is Ownable {
     DoctorRecord[] doctorRecords;
     mapping(address => PharmacyRecord) pharmacyRecordDetails;
     PharmacyRecord[] pharmacyRecords;
+    address[] public pharmacyAddress;
 
     mapping(address => mapping(address => bool)) public hasAccessToDoctor;
     mapping(address => mapping(address => bool)) public hasAccessToPharmacy;
@@ -162,6 +163,17 @@ contract PatientRecordSystem is Ownable {
             //     }
             // }
             // pharmacyRecords.pop();
+            // address  pharmacy;
+            // for (uint i = 0; i < pharmacyAddress.length; i++) {
+            //     if (pharmacyAddress[i] == _addr) {
+            //         pharmacy = pharmacyAddress[i];
+            //         pharmacyAddress[i] = pharmacyAddress[
+            //             pharmacyAddress.length - 1
+            //         ];
+            //         pharmacyAddress[pharmacyAddress.length - 1] = pharmacy;
+            //     }
+            // }
+            // pharmacyAddress.pop();
 
             delete pharmacyRecordDetails[_addr];
         }
@@ -180,32 +192,66 @@ contract PatientRecordSystem is Ownable {
             return "Registered as Pharmacy";
     }
 
+    function updatePatientArray(
+        bytes32 name,
+        uint age,
+        bytes32 gender,
+        bytes32 bloodGroup
+    ) public returns (bool) {
+        bool control = true;
+        for (uint i = 0; i < patientRecords.length; i++) {
+            if (patientRecords[i].addr == msg.sender) {
+                PatientRecord memory patient = PatientRecord(
+                    name,
+                    age,
+                    gender,
+                    bloodGroup,
+                    msg.sender,
+                    block.timestamp,
+                    msg.sender,
+                    address(0),
+                    ""
+                );
+                patientRecords[i] = patient;
+                patientRecordDetails[msg.sender] = patient;
+                control = false;
+            }
+        }
+        return control;
+    }
+
+    function updatePatientDoctor(
+        PatientRecord memory patient,
+        address _patient
+    ) internal {
+        for (uint i = 0; i < patientRecords.length; i++) {
+            if (patientRecords[i].addr == _patient) {
+                patientRecords[i] = patient;
+            }
+        }
+    }
+
     function addPatientRecord(
         bytes32 name,
         uint age,
         bytes32 gender,
         bytes32 bloodGroup
     ) public isPatient(msg.sender) {
-        PatientRecord memory patient = PatientRecord(
-            name,
-            age,
-            gender,
-            bloodGroup,
-            msg.sender,
-            block.timestamp,
-            msg.sender,
-            address(0),
-            ""
-        );
-        bool control = true;
-        for (uint i = 0; i < patientRecords.length; i++) {
-            if (patientRecords[i].addr == msg.sender) {
-                patientRecords[i] = patient;
-                control = false;
-            }
+        if (updatePatientArray(name, age, gender, bloodGroup)) {
+            PatientRecord memory patient = PatientRecord(
+                name,
+                age,
+                gender,
+                bloodGroup,
+                msg.sender,
+                block.timestamp,
+                msg.sender,
+                address(0),
+                ""
+            );
+            patientRecords.push(patient);
+            patientRecordDetails[msg.sender] = patient;
         }
-        if (control) patientRecords.push(patient);
-        patientRecordDetails[msg.sender] = patient;
         emit PatientRecordsAdded(msg.sender);
     }
 
@@ -274,14 +320,13 @@ contract PatientRecordSystem is Ownable {
                 control = false;
             }
         }
-        if (control) pharmacyRecords.push(Pharmacy);
+        if (control) {
+            pharmacyRecords.push(Pharmacy);
+            pharmacyAddress.push(msg.sender);
+        }
         pharmacyRecordDetails[msg.sender] = Pharmacy;
         emit PharmacyRecordsAdded(msg.sender);
     }
-
-    // function getPharmacyRecord() public isPharmacy(msg.sender) returns(uint) {
-    //   return 5;
-    // }
 
     function getPharmacyRecord()
         public
@@ -424,6 +469,7 @@ contract PatientRecordSystem is Ownable {
             _pharmacy,
             _desc
         );
+        updatePatientDoctor(patient, _addr);
         patientRecordDetails[_addr] = patient;
         emit PatientRecordModified(_addr, msg.sender);
     }

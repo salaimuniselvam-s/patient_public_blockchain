@@ -31,7 +31,7 @@ const AllPharmas = () => {
     <div className="px-6 py-3">
       {Pharmas.map((data, key) => {
         let props = { ...data, id: key + 1, user };
-        return <PharmaInfoContainer {...props} />;
+        return <PharmaInfoContainer {...props} key={key} />;
       })}
     </div>
   );

@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../context";
-import { parseDate, parseInteger, parseString } from "../utils/ContractEnum";
+import {
+  formatString,
+  parseDate,
+  parseInteger,
+  parseString,
+} from "../utils/ContractEnum";
 import Patientinfocontainer from "../components/patientinfocontainer";
-import { formatBytes32String } from "ethers/lib/utils";
 
 const MyRecords = () => {
   const { user, contract, walletAddress } = useGlobalContext();
@@ -30,10 +34,10 @@ const MyRecords = () => {
 
   const updateRecords = async ({ name, age, gender, blood }, setModal) => {
     const tx = await contract.addPatientRecord(
-      formatBytes32String(name),
+      formatString(name),
       age,
-      formatBytes32String(gender),
-      formatBytes32String(blood)
+      formatString(gender),
+      formatString(blood)
     );
     await tx.wait(1);
     getPatientRecords();
@@ -46,7 +50,7 @@ const MyRecords = () => {
     <div className="px-6 py-3">
       {Patients.map((data, key) => {
         let props = { ...data, id: key + 1, user, updateRecords };
-        return <Patientinfocontainer {...props} />;
+        return <Patientinfocontainer {...props} key={key} />;
       })}
     </div>
   );

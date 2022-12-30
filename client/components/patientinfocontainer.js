@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Card, Form, Input, Modal } from "antd";
 const Patientinfocontainer = ({
   id,
@@ -13,22 +13,13 @@ const Patientinfocontainer = ({
   pharmacy,
   user,
   updateRecords,
+  isDoctor,
 }) => {
   const [form] = Form.useForm();
   const [modal, setModal] = useState(false);
 
   const onFinish = (value) => {
     updateRecords(value, setModal);
-  };
-
-  const handleChange = (event) => {
-    // const { name, value } = event.target;
-    // setObject((prevVal) => {
-    //   return {
-    //     ...prevVal,
-    //     [name]: value,
-    //   };
-    // });
   };
   const openModal = () => {
     setModal(true);
@@ -95,9 +86,12 @@ const Patientinfocontainer = ({
           </label>
         </div>
         <br />
-        {user == 1 && (
+        {(user == 1 || isDoctor) && (
           <div className="flex justify-center">
-            <Button onClick={openModal} className="bg-blue-500 text-white">
+            <Button
+              onClick={openModal}
+              className="px-4 py-1 rounded-lg bg-blue-600 w-fit  font-bold hover text-white"
+            >
               Update
             </Button>
           </div>
@@ -113,28 +107,28 @@ const Patientinfocontainer = ({
       >
         <Form onFinish={onFinish} form={form} name="PatientRecords">
           <Form.Item name="name" label="Name">
-            <Input />
+            <Input readOnly={isDoctor} />
           </Form.Item>
           <Form.Item name="age" label="Age">
-            <Input type="number" />
+            <Input type="number" readOnly={isDoctor} />
           </Form.Item>
           <Form.Item name="gender" label="Gender">
-            <Input type="gender" />
+            <Input type="gender" readOnly={isDoctor} />
           </Form.Item>
           <Form.Item name="blood" label="Blood Group">
-            <Input />
+            <Input readOnly={isDoctor} />
           </Form.Item>
           <Form.Item name="updatedby" label="updatedBy">
-            <Input />
+            <Input readOnly />
           </Form.Item>
           <Form.Item name="pharmacy" label="Pharmacy">
-            <Input />
+            <Input readOnly={!isDoctor} />
           </Form.Item>
           <Form.Item label="Description" name="description">
-            <Input />
+            <Input readOnly={!isDoctor} />
           </Form.Item>
           <Form.Item name="addr" label="Address">
-            <Input />
+            <Input readOnly />
           </Form.Item>
           <Button className="bg-blue-500" type="primary" htmlType="submit">
             Update

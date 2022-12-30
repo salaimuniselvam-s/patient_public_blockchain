@@ -112,12 +112,20 @@ const Header = () => {
             )}
             {/* Pharmacy Header */}
             {user == 3 && (
-              <Link
-                href="/Pharma"
-                className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
-              >
-                Pharma
-              </Link>
+              <>
+                <Link
+                  href="/MyPharma"
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                >
+                  My Records
+                </Link>
+                <Link
+                  href="/PharmaPatients"
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                >
+                  Patients
+                </Link>
+              </>
             )}
             <div
               className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}

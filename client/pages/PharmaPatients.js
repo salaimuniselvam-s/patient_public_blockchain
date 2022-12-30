@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../context";
-import {
-  Owner,
-  formatString,
-  parseDate,
-  parseInteger,
-  parseString,
-} from "../utils/ContractEnum";
+import { parseDate, parseInteger, parseString } from "../utils/ContractEnum";
 import Patientinfocontainer from "../components/patientinfocontainer";
 
-const Patients = () => {
+const PharmaPatients = () => {
   const { user, contract, walletAddress } = useGlobalContext();
   const [Patients, setPatients] = useState([]);
 
-  const getPatientsOfDoctors = async () => {
-    const records = await contract.getPatientsOfDoctors();
+  const getAllPatientRecords = async () => {
+    const records = await contract.getPatientsOfPharmacy();
     const output = records?.map((data) => {
       let patient = {
         name: parseString(data["name"]),
@@ -33,33 +27,19 @@ const Patients = () => {
     setPatients(output);
   };
   useEffect(() => {
-    if (contract && walletAddress) getPatientsOfDoctors();
+    if (contract && walletAddress) getAllPatientRecords();
   }, [walletAddress]);
-
-  const updateRecords = async ({ addr, pharmacy, description }, setModal) => {
-    const tx = await contract.modifyPatientRecord(addr, pharmacy, description);
-    await tx.wait(1);
-    getPatientsOfDoctors();
-    setModal(false);
-  };
-
-  if (user != 2) {
+  if (user != 3) {
     return <div>No Data</div>;
   }
   return (
     <div className="px-6 py-3">
       {Patients.map((data, key) => {
-        let props = {
-          ...data,
-          id: key + 1,
-          user,
-          isDoctor: true,
-          updateRecords,
-        };
+        let props = { ...data, id: key + 1, user };
         return <Patientinfocontainer {...props} key={key} />;
       })}
     </div>
   );
 };
 
-export default Patients;
+export default PharmaPatients;

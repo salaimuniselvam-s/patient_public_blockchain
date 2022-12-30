@@ -43,7 +43,7 @@ const AllPatients = () => {
     <div className="px-6 py-3">
       {Patients.map((data, key) => {
         let props = { ...data, id: key + 1, user };
-        return <Patientinfocontainer {...props} />;
+        return <Patientinfocontainer {...props} key={key} />;
       })}
     </div>
   );
