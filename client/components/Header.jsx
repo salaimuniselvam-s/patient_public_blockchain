@@ -23,7 +23,7 @@ const Header = () => {
 
   return (
     <div>
-      <nav className="bg-stone-800 py-2 md:py-4">
+      <nav className=" bg-gradient-to-tl from-slate-300  to-slate-700 py-2 md:py-4">
         <div className="container px-4 mx-auto md:flex md:items-center">
           <div className="flex justify-between items-center">
             <Link href="/" className="font-bold text-xl text-white">
