@@ -3,16 +3,19 @@ import { useGlobalContext } from "../context";
 import CustomButton from "./CustomButton";
 import { ContractEnumState } from "../utils/ContractEnum";
 import { useRouter } from "next/dist/client/router";
-import { notification } from "antd";
+import { Modal, notification } from "antd";
+import PatientRegister from "./PatientRegister";
+import DoctorRegister from "./DoctorRegister";
+import PharmacyRegister from "./PharmacyRegister";
 
-const HomePage = () => {
+const HomePage = ({ setCloseModal }) => {
   const [api, contextHolder] = notification.useNotification();
   const { walletAddress, ownerContract, setErrorMessage, setUser } =
     useGlobalContext();
   const [desc, setDesc] = useState(1);
-  const router = useRouter();
+  const [modal, setModal] = useState(false);
 
-  const requestAccess = async () => {
+  const requestAccess = async (result, AddPerson) => {
     try {
       const tx = await ownerContract.authorizeUser(walletAddress, desc);
       await tx.wait(1);
@@ -24,6 +27,7 @@ const HomePage = () => {
         duration: 1,
       });
       setUser(desc);
+      AddPerson(result, setModal, setCloseModal);
     } catch (error) {
       console.error(error);
       api["error"]({
@@ -68,9 +72,37 @@ const HomePage = () => {
       </div>
       <CustomButton
         title="Request Access"
-        handleClick={requestAccess}
+        handleClick={() => setModal(true)}
         restStyle="my-3 flex justify-center"
       />
+      <Modal
+        title={"Enter Details"}
+        width="50vw"
+        className="text-white"
+        onOk={() => setModal(false)}
+        onCancel={() => setModal(false)}
+        open={modal}
+        footer={null}
+      >
+        {desc == 1 ? (
+          <PatientRegister
+            requestAccess={requestAccess}
+            setCloseModal={setCloseModal}
+          />
+        ) : desc == 2 ? (
+          <DoctorRegister
+            requestAccess={requestAccess}
+            setCloseModal={setCloseModal}
+          />
+        ) : desc == 3 ? (
+          <PharmacyRegister
+            requestAccess={requestAccess}
+            setCloseModal={setCloseModal}
+          />
+        ) : (
+          "Please Select Any Role"
+        )}
+      </Modal>
     </div>
   );
 };

@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <GlobalContextProvider>
         <Header />
-        <div className="relative">
+        <div className="relative ">
           <OnboardModal />
           <Component {...pageProps} />
         </div>

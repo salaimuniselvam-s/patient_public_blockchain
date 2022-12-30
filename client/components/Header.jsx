@@ -5,6 +5,8 @@ import { useGlobalContext } from "../context";
 import { ContractEnumState, Owner } from "../utils/ContractEnum";
 
 const Header = () => {
+  const { pathname } = useRouter();
+  const highlightNavBar = `bg-slate-700`;
   const { user, walletAddress, setErrorMessage, setUser, contract } =
     useGlobalContext();
   useEffect(() => {
@@ -23,11 +25,11 @@ const Header = () => {
 
   return (
     <div>
-      <nav className=" bg-gradient-to-tl from-slate-300  to-slate-700 py-2 md:py-4">
-        <div className="container px-4 mx-auto md:flex md:items-center">
+      <nav className=" bg-gradient-to-tl  from-slate-300  to-slate-700 py-2 md:py-4">
+        <div className="container lg:px-4 md:px-1 mx-auto md:flex md:items-center">
           <div className="flex justify-between items-center">
             <Link href="/" className="font-bold text-xl text-white">
-              Patient Record - Block Chain
+              Patient Record
             </Link>
             <button
               className="border border-solid border-gray-600 px-3 py-1 rounded text-white opacity-50 hover:opacity-75 md:hidden"
@@ -46,19 +48,25 @@ const Header = () => {
               <>
                 <Link
                   href="/AllPatients"
-                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors ${
+                    pathname == `/AllPatients` && highlightNavBar
+                  } duration-300 `}
                 >
                   Patients
                 </Link>
                 <Link
                   href="/AllDoctors"
-                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 ${
+                    pathname == `/AllDoctors` && highlightNavBar
+                  } `}
                 >
                   Doctors
                 </Link>
                 <Link
                   href="/AllPharmas"
-                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 ${
+                    pathname == `/AllPharmas` && highlightNavBar
+                  } `}
                 >
                   Pharmas
                 </Link>
@@ -69,19 +77,25 @@ const Header = () => {
               <>
                 <Link
                   href="/MyRecords"
-                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors ${
+                    pathname == `/MyRecords` && highlightNavBar
+                  } duration-300 `}
                 >
                   My Records
                 </Link>
                 <Link
                   href="/Doctors"
-                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 ${
+                    pathname == `/Doctors` && highlightNavBar
+                  }`}
                 >
                   Doctors
                 </Link>
                 <Link
                   href="/Pharma"
-                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 ${
+                    pathname == `/Pharma` && highlightNavBar
+                  }`}
                 >
                   Pharma
                 </Link>
@@ -92,19 +106,25 @@ const Header = () => {
               <>
                 <Link
                   href="/DoctorDetails"
-                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 ${
+                    pathname == `/DoctorDetails` && highlightNavBar
+                  }`}
                 >
                   My Details
                 </Link>
                 <Link
                   href="/Patients"
-                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 ${
+                    pathname == `/Patients` && highlightNavBar
+                  }`}
                 >
                   Patients
                 </Link>
                 <Link
                   href="/Pharma"
-                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 ${
+                    pathname == `/Pharma` && highlightNavBar
+                  }`}
                 >
                   Pharma
                 </Link>
@@ -115,13 +135,17 @@ const Header = () => {
               <>
                 <Link
                   href="/MyPharma"
-                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 ${
+                    pathname == `/MyPharma` && highlightNavBar
+                  }`}
                 >
                   My Records
                 </Link>
                 <Link
                   href="/PharmaPatients"
-                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 `}
+                  className={`p-2 lg:px-4 md:mx-2 text-white rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300 ${
+                    pathname == `/PharmaPatients` && highlightNavBar
+                  }`}
                 >
                   Patients
                 </Link>

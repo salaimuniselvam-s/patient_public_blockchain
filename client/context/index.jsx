@@ -6,10 +6,12 @@ import { GetParams } from "../utils/Onboard.js";
 import { ABI, ADDRESS } from "../constants";
 import { OwnerPrivateKey } from "../utils/ContractEnum.js";
 import { notification } from "antd";
+import { useRouter } from "next/dist/client/router.js";
 
 const GlobalContext = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
+  const router = useRouter();
   const [api, contextHolder] = notification.useNotification();
   const [walletAddress, setWalletAddress] = useState("");
   const [contract, setContract] = useState(null);
@@ -67,6 +69,7 @@ export const GlobalContextProvider = ({ children }) => {
 
   //* Set the smart contract and provider to the state
   useEffect(() => {
+    router.push("/");
     const setSmartContractAndProvider = async () => {
       try {
         const web3Modal = new Web3Modal();

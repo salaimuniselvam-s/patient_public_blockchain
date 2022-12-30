@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../context";
-import { Owner, formatString, parseString } from "../utils/ContractEnum";
+import { formatString, parseString } from "../utils/ContractEnum";
 import PharmaInfoContainer from "../components/PharmaInfoContainer";
 
 const MyPharma = () => {

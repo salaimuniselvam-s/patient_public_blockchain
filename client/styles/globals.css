@@ -2,9 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-.ant-modal-content{
+.ant-modal-content {
   background-color: slategray !important;
 }
-.ant-modal-header{
-    background-color: slategrey !important;
+.ant-modal-header {
+  background-color: slategrey !important;
+}
+.ant-modal-title {
+  color: #ffffff !important;
+  font-size: 18px !important;
+}
+.ant-form-item-label > label {
+  color: #ffffff !important;
+  font-size: 16px !important;
+}
+.content-area {
+  height: calc(100vh - theme(padding.16)) !important;
+  min-height: 600px !important;
 }

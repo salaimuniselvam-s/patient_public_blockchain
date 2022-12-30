@@ -37,19 +37,19 @@ const Patientinfocontainer = ({
   };
   return (
     <>
-      <Card className="bg-slate-300  w-full mt-3 ">
+      <Card className="bg-slate-300 text-xl  w-full mt-3 ">
         <div className=" text-2xl font-bold">Patient Id : {id}</div>
-        <label className="mr-3">
-          <span>Name : </span>
-          <span className=" font-semibold text-lg">{name}</span>
-        </label>
-        <label>
-          <span>Age :</span>
-          <span className=" font-semibold text-lg">{age}</span>
-        </label>
-        <br />
-        <div className="flex  justify-evenly">
-          <div className="flex  flex-col mr-6">
+        <div>
+          <div></div>
+          <div className="grid grid-cols-2 gap-4 justify-between">
+            <label>
+              <span>Name : </span>
+              <span className=" font-semibold text-lg">{name}</span>
+            </label>
+            <label>
+              <span>Age :</span>
+              <span className=" font-semibold text-lg">{age}</span>
+            </label>
             <label>
               <span>Blood Group:</span>{" "}
               <span className=" font-semibold text-lg">{blood}</span>
@@ -62,8 +62,6 @@ const Patientinfocontainer = ({
               <span>Address :</span>{" "}
               <span className=" font-semibold text-lg">{addr}</span>
             </label>
-          </div>
-          <div className="flex-col flex mr-6">
             <label>
               <span>Timestamp :</span>
               <span className=" font-semibold text-lg"> {timestamp}</span>
@@ -76,15 +74,14 @@ const Patientinfocontainer = ({
               <span>Pharmacy:</span>{" "}
               <span className=" font-semibold text-lg">{pharmacy}</span>
             </label>
+
+            <label>
+              <span>Description: </span>
+              <span className=" font-semibold ml-1 text-lg">{description}</span>
+            </label>
           </div>
         </div>
-        <br />
-        <div>
-          <label>
-            <span>Description: </span>
-            <span className=" font-semibold ml-1 text-lg">{description}</span>
-          </label>
-        </div>
+
         <br />
         {(user == 1 || isDoctor) && (
           <div className="flex justify-center">
