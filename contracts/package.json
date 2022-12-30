@@ -22,7 +22,8 @@
         "lint": "solhint 'contracts/**/*.sol'",
         "lint:fix": "solhint 'contracts/**/*.sol' --fix",
         "format": "prettier --write .",
-        "coverage": "hardhat coverage"
+        "coverage": "hardhat coverage",
+        "update": "npx hardhat run scripts/joinRecords.js --network localhost"
     },
     "dependencies": {
         "@openzeppelin/contracts": "^4.8.0"

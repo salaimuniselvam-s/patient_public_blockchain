@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Card } from "antd";
-const Doctorinfocontainer = ({
+import React, { useEffect, useState } from "react";
+import { Button, Card } from "antd";
+import { useGlobalContext } from "../context";
+const PatientsDoctorContainer = ({
   name,
   age,
   gender,
@@ -9,6 +10,26 @@ const Doctorinfocontainer = ({
   addr,
   location,
 }) => {
+  const { contract, walletAddress, user } = useGlobalContext();
+  const [control, setControl] = useState(false);
+  const RevokeAccess = async () => {
+    const tx = await contract.revokeAccessToDoctor(addr);
+    await tx.wait(1);
+    hasAccess();
+  };
+  const GrantAccess = async () => {
+    const tx = await contract.allowAccessToDoctor(addr);
+    await tx.wait(1);
+    hasAccess();
+  };
+  const hasAccess = async () => {
+    const control = await contract.hasAccessToDoctor(addr, walletAddress);
+    setControl(control);
+  };
+  useEffect(() => {
+    if (walletAddress && addr) hasAccess();
+  }, [walletAddress, addr]);
+
   return (
     <>
       <Card className="bg-slate-300  w-full mt-3 ">
@@ -47,9 +68,19 @@ const Doctorinfocontainer = ({
             </label>
           </div>
         </div>
+        {user == 1 && (
+          <div className="flex justify-center mt-3">
+            <Button
+              onClick={control ? RevokeAccess : GrantAccess}
+              className="px-4 py-1 rounded-lg bg-blue-600 w-fit  font-bold hover text-white"
+            >
+              {control ? "Revoke Access" : "Grant Access"}
+            </Button>
+          </div>
+        )}
       </Card>
     </>
   );
 };
 
-export default Doctorinfocontainer;
+export default PatientsDoctorContainer;
