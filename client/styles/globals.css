@@ -48,3 +48,10 @@
   right: 0px !important;
   left: initial !important;
 }
+.ant-select-disabled {
+  background-color: #ffffff !important;
+  border-radius: 6px !important;
+}
+.ant-select-disabled .ant-select-selection-item {
+  color: #000 !important;
+}

@@ -4,7 +4,11 @@ import Modal from "react-modal";
 
 import CustomButton from "./CustomButton";
 import { useGlobalContext } from "../context";
-import { GetParams, SwitchNetwork } from "../utils/Onboard.js";
+import {
+  GetParams,
+  SwitchMumbaiPolygonNetwork,
+  SwitchNetwork,
+} from "../utils/Onboard.js";
 const customStyles = {
   content: {
     top: "50%",
@@ -17,6 +21,7 @@ const customStyles = {
 };
 
 const OnboardModal = () => {
+  const { chainId } = useGlobalContext();
   const [modalIsOpen, setIsOpen] = useState(false);
   const { updateCurrentWalletAddress } = useGlobalContext();
   const [step, setStep] = useState(-1);
@@ -38,6 +43,15 @@ const OnboardModal = () => {
       resetParams();
     });
   }, []);
+
+  const openFauct = () => {
+    if (chainId == 5) {
+      window.open("https://goerlifaucet.com/", "_blank");
+    }
+    if (chainId == 80001) {
+      window.open("https://faucet.polygon.technology/", "_blank");
+    }
+  };
 
   const generateStep = (st) => {
     switch (st) {
@@ -71,8 +85,16 @@ const OnboardModal = () => {
       case 2:
         return (
           <>
-            <p>You're on a different network. Switch to Goerli.</p>
-            <CustomButton title="Switch" handleClick={SwitchNetwork} />
+            <p>
+              You're on a different network. Switch Network To Any One of the
+              Below Networks.
+            </p>
+            <CustomButton title=" Goerli" handleClick={SwitchNetwork} />
+            or
+            <CustomButton
+              title=" Polygon"
+              handleClick={SwitchMumbaiPolygonNetwork}
+            />
           </>
         );
 
@@ -82,9 +104,7 @@ const OnboardModal = () => {
             <p>Oops, you don't have Ethers in your account</p>
             <CustomButton
               title="Grab some test tokens"
-              handleClick={() =>
-                window.open("https://goerlifaucet.com/", "_blank")
-              }
+              handleClick={openFauct}
             />
           </>
         );

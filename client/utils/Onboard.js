@@ -1,5 +1,9 @@
 /* eslint-disable prefer-destructuring */
 
+import { TEST_CHAIN } from "./ContractEnum";
+import { ethers } from "ethers";
+ethers.utils.hexlify(80001);
+
 function isEthereum() {
   if (window.ethereum) {
     return true;
@@ -87,8 +91,11 @@ export const GetParams = async () => {
   }
 
   response.account = currentAccount;
-
-  if (getChainID() !== 5 && getChainID() !== 31337 && getChainID() !== 1337) {
+  if (
+    !TEST_CHAIN.includes(getChainID()) &&
+    getChainID() !== 31337 &&
+    getChainID() !== 1337
+  ) {
     response.step = 2;
     return response;
   }
@@ -133,6 +140,40 @@ export async function SwitchNetwork() {
               },
               rpcUrls: ["https://goerli.infura.io/v3/"],
               blockExplorerUrls: ["https://goerli.etherscan.io"],
+            },
+          ],
+        })
+        .catch((error) => console.error(error));
+    }
+  }
+}
+
+export async function SwitchMumbaiPolygonNetwork() {
+  try {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: "0x13881" }],
+    });
+  } catch (error) {
+    console.error(error);
+    if (error.code == 4902) {
+      // let hex_chainId = ethers.utils.hexValue(5);
+      await window?.ethereum
+        ?.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0x13881",
+              chainName: "Mumbai Polygon",
+              nativeCurrency: {
+                name: "MATIC",
+                symbol: "MATIC",
+                decimals: 18,
+              },
+              rpcUrls: [
+                "https://polygon-mumbai.g.alchemy.com/v2/FizZKOR3E3N1lDdeBQ1lMoXLv1SncZcT",
+              ],
+              blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
             },
           ],
         })

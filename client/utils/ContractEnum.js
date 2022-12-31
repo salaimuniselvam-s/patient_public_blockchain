@@ -1,6 +1,8 @@
 import { ethers } from "ethers";
 import moment from "moment";
 
+export const TEST_CHAIN = [5, 80001];
+
 const state = {
   "Not Registered": { enumState: 0, route: "/", status: "Unauthorized" },
   "Registered as Patient": {
@@ -39,12 +41,12 @@ export const ContractEnumState = (value) => {
   return state[value];
 };
 export const OwnerPrivateKey = (chainId) => {
-  return chainId == 5
+  return TEST_CHAIN.includes(chainId)
     ? "a2f5823bba6f2e93283337c56e826a3ea143fadcf27daf67a1a83139b7f6a384"
     : "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 };
 export const Owner = (chainId) => {
-  return chainId == 5
+  return TEST_CHAIN.includes(chainId)
     ? "0x3dd675dbEFb0bB31E7648864cEB437e4A62ddEb2"
     : "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 };

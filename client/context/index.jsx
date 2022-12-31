@@ -7,6 +7,7 @@ import { ABI, ADDRESS } from "../constants";
 import { OwnerPrivateKey } from "../utils/ContractEnum.js";
 import { notification } from "antd";
 import { useRouter } from "next/dist/client/router.js";
+import { createEventListeners } from "./eventListeners.js";
 
 const GlobalContext = createContext();
 
@@ -94,6 +95,18 @@ export const GlobalContextProvider = ({ children }) => {
     setSmartContractAndProvider();
     updateCurrentWalletAddress();
   }, [walletAddress]);
+
+  //* Activate event listeners for the smart contract
+  useEffect(() => {
+    if (step == -1 && contract) {
+      createEventListeners({
+        router,
+        contract,
+        provider,
+        walletAddress,
+      });
+    }
+  }, [step, contract]);
 
   //* Handle alerts
   useEffect(() => {
