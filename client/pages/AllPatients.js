@@ -19,6 +19,7 @@ const AllPatients = () => {
     setLoader(true);
     try {
       const records = await contract.getAllPatientRecords();
+
       const pharmacy = await contract.getAllPharmacyAddress();
       setPharmacy(pharmacy);
       const output = records?.map((data) => {
@@ -65,7 +66,13 @@ const AllPatients = () => {
   return (
     <div className="px-6 py-3">
       {Patients.map((data, key) => {
-        let props = { ...data, id: key + 1, user, pharmacyAddress };
+        let props = {
+          ...data,
+          id: key + 1,
+          user,
+          pharmacyAddress,
+          getAllPatientRecords: getAllPatientRecords,
+        };
         return <Patientinfocontainer {...props} key={key} />;
       })}
     </div>

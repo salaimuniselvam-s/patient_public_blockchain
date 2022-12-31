@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Button, Card, Form, Input, Modal, Select, Spin } from "antd";
+import { Button, Card, Form, Input, Modal, Select, Spin, message } from "antd";
 import { formItemLayout } from "./PatientRegister";
+import { useGlobalContext } from "../context";
+import { Owner } from "../utils/ContractEnum";
 const Patientinfocontainer = ({
   id,
   name,
@@ -16,10 +18,13 @@ const Patientinfocontainer = ({
   updateRecords,
   isDoctor,
   pharmacyAddress = [],
+  getAllPatientRecords,
 }) => {
+  const { walletAddress, chainId, ownerContract } = useGlobalContext();
   const [form] = Form.useForm();
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [revokeLoading, setRevokeLoading] = useState(false);
 
   const onFinish = (value) => {
     updateRecords(value, setModal, setLoading);
@@ -37,6 +42,22 @@ const Patientinfocontainer = ({
       description,
       pharmacy,
     });
+  };
+  const revokeUser = async (addr) => {
+    setRevokeLoading(true);
+    try {
+      const tx = await ownerContract.revokeUser(addr);
+      tx.wait(1);
+      message.success(
+        `${walletAddress} is Successfully Removed from the records`
+      );
+      await getAllPatientRecords();
+    } catch (error) {
+      console.error(error);
+      message.error("Revoke Failed.. Please Try Again..");
+    } finally {
+      setRevokeLoading(false);
+    }
   };
   return (
     <>
@@ -93,6 +114,17 @@ const Patientinfocontainer = ({
               className="px-4 py-1 rounded-lg bg-blue-600 w-fit  font-bold hover text-white"
             >
               {isDoctor ? "Prescribe" : "Update"}
+            </Button>
+          </div>
+        )}
+        {walletAddress.toString().toLowerCase() ==
+          Owner(chainId).toLowerCase() && (
+          <div className="flex justify-center">
+            <Button
+              onClick={() => revokeUser(addr)}
+              className="px-4 py-1 rounded-lg bg-blue-600 w-fit  font-bold hover text-white"
+            >
+              {revokeLoading ? <Spin size="small" /> : "Revoke User"}
             </Button>
           </div>
         )}
