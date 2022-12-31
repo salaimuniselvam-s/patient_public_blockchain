@@ -8,11 +8,14 @@ const Patients = () => {
   const { user, contract, walletAddress } = useGlobalContext();
   const [Patients, setPatients] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [pharmacyAddress, setPharmacy] = useState([]);
 
   const getPatientsOfDoctors = async () => {
     setLoader(true);
     try {
       const records = await contract.getPatientsOfDoctors();
+      const pharmacy = await contract.getAllPharmacyAddress();
+      setPharmacy(pharmacy);
       const output = records?.map((data) => {
         let patient = {
           name: parseString(data["name"]),
@@ -85,6 +88,7 @@ const Patients = () => {
           user,
           isDoctor: true,
           updateRecords,
+          pharmacyAddress,
         };
         return <Patientinfocontainer {...props} key={key} />;
       })}

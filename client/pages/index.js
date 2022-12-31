@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 export default function Home() {
   const router = useRouter();
-  const { contract, walletAddress, setErrorMessage, user, setUser } =
+  const { chainId, contract, walletAddress, setErrorMessage, user, setUser } =
     useGlobalContext();
   const [modal, setModal] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -16,8 +16,7 @@ export default function Home() {
     setLoader(true);
     try {
       const registered = await contract.isRegistered();
-      const { enumState } = ContractEnumState(registered);
-      setUser(enumState);
+      setUser(registered);
     } catch (error) {
       console.error(error);
       setErrorMessage(error);
@@ -39,7 +38,7 @@ export default function Home() {
         </div>
       );
     } else if (
-      walletAddress.toString().toLowerCase() == Owner.toString().toLowerCase()
+      walletAddress.toString().toLowerCase() == Owner(chainId).toLowerCase()
     ) {
       return (
         <>

@@ -8,11 +8,14 @@ const PharmaPatients = () => {
   const { user, contract, walletAddress } = useGlobalContext();
   const [Patients, setPatients] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [pharmacyAddress, setPharmacy] = useState([]);
 
   const getAllPatientRecords = async () => {
     setLoader(true);
     try {
       const records = await contract.getPatientsOfPharmacy();
+      const pharmacy = await contract.getAllPharmacyAddress();
+      setPharmacy(pharmacy);
       const output = records?.map((data) => {
         let patient = {
           name: parseString(data["name"]),
@@ -56,7 +59,7 @@ const PharmaPatients = () => {
   return (
     <div className="px-6 py-3">
       {Patients.map((data, key) => {
-        let props = { ...data, id: key + 1, user };
+        let props = { ...data, id: key + 1, user, pharmacyAddress };
         return <Patientinfocontainer {...props} key={key} />;
       })}
     </div>

@@ -5,7 +5,7 @@ import PharmaInfoContainer from "../components/PharmaInfoContainer";
 import { Spin, message } from "antd";
 
 const AllPharmas = () => {
-  const { user, contract, walletAddress } = useGlobalContext();
+  const { chainId, user, contract, walletAddress } = useGlobalContext();
   const [Pharmas, setPharmas] = useState([]);
   const [loader, setLoader] = useState(false);
 
@@ -34,9 +34,7 @@ const AllPharmas = () => {
     if (contract && walletAddress) getAllPharmaRecords();
   }, [walletAddress]);
 
-  if (
-    walletAddress.toString().toLowerCase() != Owner.toString().toLowerCase()
-  ) {
+  if (walletAddress.toString().toLowerCase() != Owner(chainId).toLowerCase()) {
     return <div>No Data</div>;
   }
 

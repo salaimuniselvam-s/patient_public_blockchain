@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Card, Form, Input, Modal, Spin } from "antd";
+import { Button, Card, Form, Input, Modal, Select, Spin } from "antd";
 import { formItemLayout } from "./PatientRegister";
 const Patientinfocontainer = ({
   id,
@@ -15,6 +15,7 @@ const Patientinfocontainer = ({
   user,
   updateRecords,
   isDoctor,
+  pharmacyAddress = [],
 }) => {
   const [form] = Form.useForm();
   const [modal, setModal] = useState(false);
@@ -125,7 +126,15 @@ const Patientinfocontainer = ({
             <Input readOnly />
           </Form.Item>
           <Form.Item name="pharmacy" label="Pharmacy">
-            <Input readOnly={!isDoctor} />
+            <Select disabled={!isDoctor}>
+              {pharmacyAddress.map((data, index) => {
+                return (
+                  <Select.Option value={data} key={index}>
+                    {data}
+                  </Select.Option>
+                );
+              })}
+            </Select>
           </Form.Item>
           <Form.Item label="Description" name="description">
             <Input readOnly={!isDoctor} />

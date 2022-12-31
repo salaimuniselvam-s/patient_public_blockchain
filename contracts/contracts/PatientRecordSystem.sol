@@ -53,7 +53,7 @@ contract PatientRecordSystem is Ownable {
     DoctorRecord[] doctorRecords;
     mapping(address => PharmacyRecord) pharmacyRecordDetails;
     PharmacyRecord[] pharmacyRecords;
-    // address[] public  pharmacyAddress;
+    address[] pharmacyAddress;
 
     mapping(address => mapping(address => bool)) public hasAccessToDoctor;
     mapping(address => mapping(address => bool)) public hasAccessToPharmacy;
@@ -129,15 +129,16 @@ contract PatientRecordSystem is Ownable {
         );
         if (allowAccess[_addr] == AccessControls.Patient) {
             // PatientRecord memory patient;
-            // for (uint i = 0; i < patientRecords.length; i++) {
-            //     if (patientRecords[i].addr == _addr) {
-            //         patient = patientRecords[i];
-            //         patientRecords[i] = patientRecords[
-            //             patientRecords.length - 1
-            //         ];
-            //         patientRecords[patientRecords.length - 1] = patient;
-            //     }
-            // }
+            for (uint i = 0; i < patientRecords.length; i++) {
+                if (patientRecords[i].addr == _addr) {
+                    delete patientRecords[i];
+                    // patient = patientRecords[i];
+                    // patientRecords[i] = patientRecords[
+                    //     patientRecords.length - 1
+                    // ];
+                    // patientRecords[patientRecords.length - 1] = patient;
+                }
+            }
             // patientRecords.pop();
             delete patientRecordDetails[_addr];
         }
@@ -145,9 +146,10 @@ contract PatientRecordSystem is Ownable {
             // DoctorRecord memory doctor;
             // for (uint i = 0; i < doctorRecords.length; i++) {
             //     if (doctorRecords[i].addr == _addr) {
-            //         doctor = doctorRecords[i];
-            //         doctorRecords[i] = doctorRecords[doctorRecords.length - 1];
-            //         doctorRecords[doctorRecords.length - 1] = doctor;
+            //         delete doctorRecords[i];
+            // doctor = doctorRecords[i];
+            // doctorRecords[i] = doctorRecords[doctorRecords.length - 1];
+            // doctorRecords[doctorRecords.length - 1] = doctor;
             //     }
             // }
             // doctorRecords.pop();
@@ -157,22 +159,24 @@ contract PatientRecordSystem is Ownable {
             // PharmacyRecord memory pharmacy;
             // for (uint i = 0; i < pharmacyRecords.length; i++) {
             //     if (pharmacyRecords[i].addr == _addr) {
-            //         pharmacy = pharmacyRecords[i];
-            //         pharmacyRecords[i] = pharmacyRecords[
-            //             pharmacyRecords.length - 1
-            //         ];
-            //         pharmacyRecords[pharmacyRecords.length - 1] = pharmacy;
+            //         delete pharmacyRecords[i];
+            // pharmacy = pharmacyRecords[i];
+            // pharmacyRecords[i] = pharmacyRecords[
+            //     pharmacyRecords.length - 1
+            // ];
+            // pharmacyRecords[pharmacyRecords.length - 1] = pharmacy;
             //     }
             // }
             // pharmacyRecords.pop();
-            // address  pharmacy;
+            // address  pharmacyAddr;
             // for (uint i = 0; i < pharmacyAddress.length; i++) {
             //     if (pharmacyAddress[i] == _addr) {
-            //         pharmacy = pharmacyAddress[i];
-            //         pharmacyAddress[i] = pharmacyAddress[
-            //             pharmacyAddress.length - 1
-            //         ];
-            //         pharmacyAddress[pharmacyAddress.length - 1] = pharmacy;
+            //          delete pharmacyAddress[i];
+            // pharmacyAddr = pharmacyAddress[i];
+            // pharmacyAddress[i] = pharmacyAddress[
+            //     pharmacyAddress.length - 1
+            // ];
+            // pharmacyAddress[pharmacyAddress.length - 1] = pharmacyAddr;
             //     }
             // }
             // pharmacyAddress.pop();
@@ -183,15 +187,20 @@ contract PatientRecordSystem is Ownable {
         allowAccess[_addr] = AccessControls.Unauthorized;
     }
 
-    function isRegistered() public view returns (string memory status) {
-        if (allowAccess[msg.sender] == AccessControls.Unauthorized)
-            return "Not Registered";
-        if (allowAccess[msg.sender] == AccessControls.Patient)
-            return "Registered as Patient";
-        if (allowAccess[msg.sender] == AccessControls.Doctor)
-            return "Registered as Doctor";
-        if (allowAccess[msg.sender] == AccessControls.Pharmacy)
-            return "Registered as Pharmacy";
+    function getAllPharmacyAddress() public view returns (address[] memory) {
+        return pharmacyAddress;
+    }
+
+    function isRegistered() public view returns (AccessControls) {
+        return allowAccess[msg.sender];
+        // if (allowAccess[msg.sender] == AccessControls.Unauthorized)
+        //     return "Not Registered";
+        // if (allowAccess[msg.sender] == AccessControls.Patient)
+        //     return "Registered as Patient";
+        // if (allowAccess[msg.sender] == AccessControls.Doctor)
+        //     return "Registered as Doctor";
+        // if (allowAccess[msg.sender] == AccessControls.Pharmacy)
+        //     return "Registered as Pharmacy";
     }
 
     function updatePatientArray(
@@ -324,7 +333,7 @@ contract PatientRecordSystem is Ownable {
         }
         if (control) {
             pharmacyRecords.push(Pharmacy);
-            // pharmacyAddress.push(msg.sender);
+            pharmacyAddress.push(msg.sender);
         }
         pharmacyRecordDetails[msg.sender] = Pharmacy;
         emit PharmacyRecordsAdded(msg.sender);
@@ -366,46 +375,32 @@ contract PatientRecordSystem is Ownable {
         return pharmacyRecords;
     }
 
-    function allowAccessToDoctor(address _doctor) public isPatient(msg.sender) {
-        require(
-            allowAccess[_doctor] == AccessControls.Doctor,
-            "Not Registered as Doctor"
-        );
+    function allowAccessToDoctor(
+        address _doctor
+    ) public isPatient(msg.sender) isDoctor(_doctor) {
         hasAccessToDoctor[_doctor][msg.sender] = true;
         emit AccessGrantedToDoctor(msg.sender, _doctor);
     }
 
     function revokeAccessToDoctor(
         address _doctor
-    ) public isPatient(msg.sender) {
-        require(
-            allowAccess[_doctor] == AccessControls.Doctor,
-            "Not Registered as Doctor"
-        );
+    ) public isPatient(msg.sender) isDoctor(_doctor) {
         hasAccessToDoctor[_doctor][msg.sender] = false;
         emit AccessRevokedFromDoctor(msg.sender, _doctor);
     }
 
     function allowAccessToPharmacy(
         address _Pharmacy
-    ) public isPatient(msg.sender) {
+    ) public isPatient(msg.sender) isPharmacy(_Pharmacy) {
         // address _Pharmacy = patientRecordDetails[msg.sender].pharmacy;
-        require(
-            allowAccess[_Pharmacy] == AccessControls.Pharmacy,
-            "Not Registered as Pharmacy"
-        );
         hasAccessToPharmacy[_Pharmacy][msg.sender] = true;
         emit AccessGrantedToPharmacy(msg.sender, _Pharmacy);
     }
 
     function revokeAccessToPharmacy(
         address _Pharmacy
-    ) public isPatient(msg.sender) {
+    ) public isPatient(msg.sender) isPharmacy(_Pharmacy) {
         // address _Pharmacy = patientRecordDetails[msg.sender].pharmacy;
-        require(
-            allowAccess[_Pharmacy] == AccessControls.Pharmacy,
-            "Not Registered as Pharmacy"
-        );
         hasAccessToPharmacy[_Pharmacy][msg.sender] = false;
         emit AccessRevokedFromPharmacy(msg.sender, _Pharmacy);
     }

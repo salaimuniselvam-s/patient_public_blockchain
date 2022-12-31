@@ -12,6 +12,7 @@ const GlobalContext = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
   const router = useRouter();
+  const [chainId, setChainId] = useState(31337);
   const [api, contextHolder] = notification.useNotification();
   const [walletAddress, setWalletAddress] = useState("");
   const [contract, setContract] = useState(null);
@@ -77,9 +78,10 @@ export const GlobalContextProvider = ({ children }) => {
         const newProvider = new ethers.providers.Web3Provider(connection);
         const signer = newProvider.getSigner();
         const { chainId } = await newProvider.getNetwork();
+        setChainId(chainId);
         const address = ADDRESS[chainId] ? ADDRESS[chainId][0] : "";
         const newContract = new ethers.Contract(address, ABI, signer);
-        const wallet = new ethers.Wallet(OwnerPrivateKey, newProvider);
+        const wallet = new ethers.Wallet(OwnerPrivateKey(chainId), newProvider);
         const ownerContract = new ethers.Contract(address, ABI, wallet);
         setProvider(newProvider);
         setContract(newContract);
@@ -142,6 +144,7 @@ export const GlobalContextProvider = ({ children }) => {
         user,
         setUser,
         ownerContract,
+        chainId,
       }}
     >
       {contextHolder}

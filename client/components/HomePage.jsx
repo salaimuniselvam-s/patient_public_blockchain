@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useGlobalContext } from "../context";
 import CustomButton from "./CustomButton";
 import { ContractEnumState } from "../utils/ContractEnum";
-import { useRouter } from "next/dist/client/router";
 import { Modal, notification } from "antd";
 import PatientRegister from "./PatientRegister";
 import DoctorRegister from "./DoctorRegister";

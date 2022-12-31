@@ -2,19 +2,18 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useGlobalContext } from "../context";
-import { ContractEnumState, Owner } from "../utils/ContractEnum";
+import { Owner } from "../utils/ContractEnum";
 
 const Header = () => {
   const { pathname } = useRouter();
   const highlightNavBar = `bg-slate-700`;
-  const { user, walletAddress, setErrorMessage, setUser, contract } =
+  const { chainId, user, walletAddress, setErrorMessage, setUser, contract } =
     useGlobalContext();
   useEffect(() => {
     const updateUser = async () => {
       try {
         const registered = await contract.isRegistered();
-        const { enumState } = ContractEnumState(registered);
-        setUser(enumState);
+        setUser(registered);
       } catch (error) {
         console.error(error);
         setErrorMessage(error);
@@ -45,7 +44,7 @@ const Header = () => {
           >
             {/* Owners Header */}
             {walletAddress.toString().toLowerCase() ==
-              Owner.toString().toLowerCase() && (
+              Owner(chainId).toLowerCase() && (
               <>
                 <Link
                   href="/AllPatients"

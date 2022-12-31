@@ -13,11 +13,14 @@ const MyRecords = () => {
   const { user, contract, walletAddress } = useGlobalContext();
   const [Patients, setPatients] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [pharmacyAddress, setPharmacy] = useState([]);
 
   const getPatientRecords = async () => {
     setLoader(true);
     try {
       const data = await contract.getPatientRecord();
+      const pharmacy = await contract.getAllPharmacyAddress();
+      setPharmacy(pharmacy);
       let patient = {
         name: parseString(data["name"]),
         age: parseInteger(data["age"]),
@@ -81,7 +84,13 @@ const MyRecords = () => {
   return (
     <div className="px-6 py-3">
       {Patients.map((data, key) => {
-        let props = { ...data, id: key + 1, user, updateRecords };
+        let props = {
+          ...data,
+          id: key + 1,
+          user,
+          updateRecords,
+          pharmacyAddress,
+        };
         return <Patientinfocontainer {...props} key={key} />;
       })}
     </div>
