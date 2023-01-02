@@ -85,12 +85,9 @@ const OnboardModal = () => {
       case 2:
         return (
           <>
-            <p>
-              You're on a different network. Switch Network To Any One of the
-              Below Networks.
-            </p>
-            <CustomButton title=" Goerli" handleClick={SwitchNetwork} />
-            or
+            <p>You're on a different network. Switch To Polygon</p>
+            {/* <CustomButton title=" Goerli" handleClick={SwitchNetwork} />
+            or */}
             <CustomButton
               title=" Polygon"
               handleClick={SwitchMumbaiPolygonNetwork}
