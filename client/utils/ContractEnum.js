@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import moment from "moment";
 
-export const TEST_CHAIN = [5];
+export const TEST_CHAIN = [5, 80001];
 
 const state = {
   "Not Registered": { enumState: 0, route: "/", status: "Unauthorized" },
