@@ -78,7 +78,7 @@ const HomePage = ({ setCloseModal }) => {
       />
       <Modal
         title={"Enter Details"}
-        width="50vw"
+        width="60vw"
         className="text-white"
         onOk={() => setModal(false)}
         onCancel={() => setModal(false)}
